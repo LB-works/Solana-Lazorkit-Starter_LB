@@ -41,7 +41,7 @@ export default function Home() {
 
                 {/* Hero Content */}
                 <div className="text-center max-w-3xl mb-16 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#7857ff]/5 text-[#7857ff] text-sm font-semibold border border-[#7857ff]/20 mb-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#7857ff]/5 text-[#7857ff] text-sm font-semibold border border-[#7857ff]/20 mb-2 relative z-10">
                         <span className="bg-[#7857ff]/20 text-[10px] px-1.5 py-0.5 rounded uppercase tracking-wide">New</span>
                         Passkey smart-wallet SDK for Solana
                     </div>
@@ -59,9 +59,7 @@ export default function Home() {
                 </div>
 
                 {/* Main Widget Section */}
-                <div className="w-full flex flex-col items-center mb-24 animate-in fade-in zoom-in duration-700 delay-150 relative">
-                    {/* Decorative background blobs */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#7857ff]/5 to-indigo-50/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
+                <div className="w-full flex flex-col items-center mb-24 animate-in fade-in zoom-in duration-700 delay-150 relative z-20">
 
                     {/* Gasless Heads-up */}
                     <div className="mb-8 flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl text-gray-900 text-sm font-bold shadow-sm">
