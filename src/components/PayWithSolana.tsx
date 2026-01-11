@@ -90,7 +90,7 @@ export function PayWithSolana() {
                     disabled={!isConnected || isLoading}
                     className="w-full bg-[#7857ff] hover:bg-[#6344d4] text-white font-bold py-4 rounded-xl shadow-[0_4px_14px_0_rgba(120,87,255,0.3)] hover:shadow-[0_6px_20px_rgba(120,87,255,0.23)] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-lg"
                 >
-                    {isLoading ? <Loader2 className="animate-spin" size={20} /> : "Pay $148.50"}
+                    {isLoading ? <Loader2 className="animate-spin" size={20} /> : `Pay ${product.price} SOL`}
                 </button>
             )}
 
