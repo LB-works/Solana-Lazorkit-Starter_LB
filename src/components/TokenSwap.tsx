@@ -50,11 +50,12 @@ export function TokenSwap() {
 
         try {
             // Perform a real transfer to a random address (simulating a swap output).
-            // Using a distinct address avoids "Account Borrowed" (0x2) errors caused by self-transfers on PDAs.
+            // Using a distinct address avoids "Account Borrowed" (0x2) errors.
+            // Sending 0.01 SOL ensures the new account meets Rent Exemption requirements (min ~0.0009 SOL).
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
                 toPubkey: Keypair.generate().publicKey,
-                lamports: 1000,
+                lamports: 0.01 * LAMPORTS_PER_SOL,
             });
 
             const txSig = await signAndSendTransaction({

@@ -13,7 +13,7 @@ export function PayWithSolana() {
 
     const product = {
         name: "Lazorkit Premium Starter",
-        price: 0.0001,
+        price: 0.01, // Must be > ~0.001 SOL to be rent-exempt for new accounts
         image: <Zap size={24} className="text-orange-400 fill-orange-400" />
     };
 
@@ -66,8 +66,8 @@ export function PayWithSolana() {
 
             <div className="flex flex-col gap-1 mb-8 text-center">
                 <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">Total Amount</div>
-                <div className="text-gray-900 font-black text-4xl tracking-tight">0.05 <span className="text-gray-400 text-2xl">SOL</span></div>
-                <div className="text-sm text-gray-500 font-medium">≈ $7.50 USD</div>
+                <div className="text-gray-900 font-black text-4xl tracking-tight">0.01 <span className="text-gray-400 text-2xl">SOL</span></div>
+                <div className="text-sm text-gray-500 font-medium">≈ $1.50 USD</div>
             </div>
 
             {status === "success" ? (
