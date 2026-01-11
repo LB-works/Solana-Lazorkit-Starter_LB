@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lazorkit Solana Starter ⚡
 
-## Getting Started
+A high-quality Next.js starter template for getting started with [Lazorkit](https://lazorkit.com) on Solana. This project demonstrates how to build a UX-first dApp with **Passkey Authentication** and **Gasless Transactions**.
 
-First, run the development server:
+## Features 🚀
 
+- **Passkey Authentication**: Users login with FaceID/TouchID. No seed phrases.
+- **Gasless Transfers**: Sponsored transactions where users pay 0 SOL (fees paid in USDC or by paymaster).
+- **Embedded Wallet**: Powered by Lazorkit SDK.
+- **Example Use Cases**:
+  - 💸 **Gasless Transfer**: Send funds without holding SOL for gas.
+  - 🛍️ **Pay with Solana**: A reusable e-commerce checkout widget.
+  - 🔄 **Token Swap**: A mock interface demonstrating complex transaction signing.
+
+## Tech Stack 🛠️
+
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Blockchain**: [Lazorkit SDK](https://docs.lazorkit.com), [@solana/web3.js](https://solana-labs.github.io/solana-web3.js/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+
+## Getting Started 🏁
+
+### 1. Clone & Install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/solana-lazorkit-starter.git
+cd solana-lazorkit-starter
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure Environment
+This project is pre-configured for **Solana Devnet**.
+You typically don't need to change anything to run the demo.
+See `components/LazorkitProviderWrapper.tsx` for configuration.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run Locally
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure 📂
 
-## Learn More
+```
+├── src/
+│   ├── app/
+│   │   ├── page.tsx            # Main landing page with all demos
+│   │   ├── layout.tsx          # Root layout with LazorkitProvider
+│   │   └── globals.css         # Global styles
+│   └── components/
+│       ├── ConnectWallet.tsx   # Passkey Login Button
+│       ├── GaslessTransfer.tsx # Sponsored Transaction Form
+│       ├── PayWithSolana.tsx   # E-commerce Widget
+│       ├── TokenSwap.tsx       # Swap Interface
+│       └── LazorkitProviderWrapper.tsx # SDK Initialization
+├── tutorials/              # Step-by-step guides
+│   ├── TUTORIAL_WALLET.md  # How to build the specific wallet connection
+│   └── TUTORIAL_GASLESS.md # How to do gasless txs
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Tutorials 📚
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Check out the [tutorials](./tutorials) folder for deep dives:
+1. **[How to Create a Passkey Wallet](./tutorials/TUTORIAL_WALLET.md)** - Learn how the connection flow works.
+2. **[How to Send Gasless Transactions](./tutorials/TUTORIAL_GASLESS.md)** - Learn about Paymasters and fee tokens.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+MIT

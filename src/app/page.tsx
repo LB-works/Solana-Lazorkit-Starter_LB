@@ -1,65 +1,99 @@
+import { ConnectWallet } from "@/components/ConnectWallet";
+import { TransactionWidget } from "@/components/TransactionWidget";
+import { Airdrop } from "@/components/Airdrop";
+import { Zap, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    return (
+        <main className="min-h-screen relative bg-white text-gray-900 selection:bg-[#7857ff]/10 selection:text-[#7857ff] font-['Inter',sans-serif]">
+
+            {/* Header */}
+            <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <div className="relative w-8 h-8 rounded-lg overflow-hidden">
+                            <Image
+                                src="/logo.png"
+                                alt="Lazorkit Logo"
+                                fill
+                                className="object-cover"
+                            />
+                        </div>
+                        <span className="font-bold text-lg tracking-tight">Lazorkit</span>
+                    </div>
+
+                    <div className="flex gap-6 items-center">
+                        <nav className="hidden md:flex items-center gap-6 mr-2">
+                            <a href="https://docs.lazorkit.com" target="_blank" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">
+                                Documentation
+                            </a>
+                            <a href="https://github.com/lazorkit" target="_blank" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">
+                                GitHub
+                            </a>
+                        </nav>
+                        <ConnectWallet />
+                    </div>
+                </div>
+            </header>
+
+            <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center relative z-10">
+
+                {/* Hero Content */}
+                <div className="text-center max-w-3xl mb-16 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#7857ff]/5 text-[#7857ff] text-sm font-semibold border border-[#7857ff]/20 mb-2">
+                        <span className="bg-[#7857ff]/20 text-[10px] px-1.5 py-0.5 rounded uppercase tracking-wide">New</span>
+                        Passkey smart-wallet SDK for Solana
+                    </div>
+
+                    <h1 className="text-6xl md:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]">
+                        Smart Wallets. <br />
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#7857ff] to-[#4F46E5]">
+                            Powered by Passkeys
+                        </span>
+                    </h1>
+
+                    <p className="text-lg text-gray-500 max-w-xl mx-auto leading-relaxed">
+                        The user experience layer for Solana. Enable gasless transactions, biometric authentication, and instant swaps with just a few lines of code.
+                    </p>
+                </div>
+
+                {/* Main Widget Section */}
+                <div className="w-full flex flex-col items-center mb-24 animate-in fade-in zoom-in duration-700 delay-150 relative">
+                    {/* Decorative background blobs */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#7857ff]/5 to-indigo-50/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
+
+                    {/* Gasless Heads-up */}
+                    <div className="mb-8 flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl text-gray-900 text-sm font-bold shadow-sm">
+                        <div className="p-1 bg-[#7857ff]/10 rounded-md">
+                            <ShieldCheck size={14} className="text-[#7857ff]" />
+                        </div>
+                        <span>Connect your wallet to perform gasless transactions</span>
+                    </div>
+
+                    <TransactionWidget />
+                </div>
+
+                {/* Footer / CTA Section */}
+                <div className="text-center space-y-12 max-w-2xl mx-auto w-full">
+                    <div className="space-y-6">
+                        <h3 className="text-2xl font-bold text-gray-900 leading-tight">Ready to Build?</h3>
+                        <p className="text-gray-500 leading-relaxed max-w-md mx-auto">
+                            Check the <span className="text-gray-900 font-semibold tracking-tight">tutorials</span> folder to learn how these components work under the hood.
+                        </p>
+
+                        <div className="flex flex-col items-center gap-6">
+                            <a href="https://docs.lazorkit.com" target="_blank" className="bg-[#7857ff] hover:bg-[#6344d4] text-white px-10 py-4 rounded-xl font-bold transition-all shadow-xl shadow-[#7857ff]/10 hover:shadow-[#7857ff]/20 active:scale-[0.98]">
+                                Read Documentation
+                            </a>
+                            <Airdrop />
+                        </div>
+                    </div>
+
+                    <div className="w-full pt-12 border-t border-gray-100" />
+                </div>
+
+            </div>
+        </main>
+    );
 }
