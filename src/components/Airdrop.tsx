@@ -46,13 +46,24 @@ export function Airdrop() {
                 </div>
             </div>
 
-            <button
-                onClick={handleAirdrop}
-                disabled={isLoading}
-                className="bg-white hover:bg-gray-100 text-gray-900 font-black px-4 py-2.5 rounded-xl text-xs border border-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm active:scale-95"
-            >
-                {isLoading ? <Loader2 className="animate-spin" size={12} /> : status === "success" ? "Success!" : "Get SOL"}
-            </button>
+            <div className="flex gap-2">
+                <button
+                    onClick={handleAirdrop}
+                    disabled={isLoading}
+                    className="bg-white hover:bg-gray-100 text-gray-900 font-black px-4 py-2.5 rounded-xl text-xs border border-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm active:scale-95"
+                >
+                    {isLoading ? <Loader2 className="animate-spin" size={12} /> : status === "success" ? "Success!" : "Get 1 SOL"}
+                </button>
+                <a
+                    href="https://faucet.solana.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold px-3 py-2.5 rounded-xl text-xs border border-gray-200 transition-all flex items-center gap-2 shadow-sm active:scale-95 no-underline"
+                    title="Get more SOL via GitHub Login"
+                >
+                    External Faucet ↗
+                </a>
+            </div>
         </div>
     );
 }
