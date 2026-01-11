@@ -49,11 +49,12 @@ export function TokenSwap() {
         setStatus("idle");
 
         try {
-            // Perform a real transfer to a random external address (simulating a swap)
-            // This avoids 0x2 errors (Self-Transfer on PDA) and Size errors (Paymaster complexity)
+            // Perform a real transfer to self (simulating a swap) to ensure validity
+            // This avoids 0x2 errors (Self-Transfer on PDA) and Size errors (Paymaster complexity) mostly, 
+            // though self-transfer is technically a no-op, it validates the signature flow.
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
-                toPubkey: new PublicKey("54K5aW44v2aW44v2aW44v2aW44v2aW44v2aW44v2aW44v2aW44"),
+                toPubkey: smartWalletPubkey,
                 lamports: 1000,
             });
 
