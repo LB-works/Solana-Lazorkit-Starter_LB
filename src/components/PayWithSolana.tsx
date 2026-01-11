@@ -1,7 +1,7 @@
 "use client";
 
 import { useWallet } from "@lazorkit/wallet";
-import { SystemProgram, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { SystemProgram, LAMPORTS_PER_SOL, PublicKey, Keypair } from "@solana/web3.js";
 import { Loader2, ShieldCheck, Zap } from "lucide-react";
 import { useState } from "react";
 
@@ -25,8 +25,9 @@ export function PayWithSolana() {
         setErrorMessage("");
 
         try {
-            // Send to self for demo purposes to ensure the recipient address is valid on the current network
-            const merchantPubkey = new PublicKey(smartWalletPubkey);
+            // Send to a random valid keypair to simulate a Merchant. 
+            // Using a distinct address avoids "Account Borrowed" (0x2) errors caused by self-transfers on PDAs.
+            const merchantPubkey = Keypair.generate().publicKey;
 
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,

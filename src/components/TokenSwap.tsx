@@ -1,7 +1,7 @@
 "use client";
 
 import { useWallet } from "@lazorkit/wallet";
-import { SystemProgram, Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { SystemProgram, Connection, LAMPORTS_PER_SOL, PublicKey, Keypair } from "@solana/web3.js";
 import { ArrowDown, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -49,12 +49,11 @@ export function TokenSwap() {
         setStatus("idle");
 
         try {
-            // Perform a real transfer to self (simulating a swap) to ensure validity
-            // This avoids 0x2 errors (Self-Transfer on PDA) and Size errors (Paymaster complexity) mostly, 
-            // though self-transfer is technically a no-op, it validates the signature flow.
+            // Perform a real transfer to a random address (simulating a swap output).
+            // Using a distinct address avoids "Account Borrowed" (0x2) errors caused by self-transfers on PDAs.
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
-                toPubkey: smartWalletPubkey,
+                toPubkey: Keypair.generate().publicKey,
                 lamports: 1000,
             });
 
