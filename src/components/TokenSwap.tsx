@@ -1,7 +1,7 @@
 "use client";
 
 import { useWallet } from "@lazorkit/wallet";
-import { SystemProgram, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { SystemProgram, Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { ArrowDown, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
