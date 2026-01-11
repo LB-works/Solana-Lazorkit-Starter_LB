@@ -26,8 +26,7 @@ export function PayWithSolana() {
 
         try {
             // Send to a fixed, random Devnet address to ensure transaction validity (PDA -> System Account)
-            // This avoids potential 0x2 errors from self-transfers or program-owned accounts
-            const merchantPubkey = new PublicKey("54K5aW44v2aW44v2aW44v2aW44v2aW44v2aW44v2aW44");
+            const merchantPubkey = new PublicKey("54K5aW44v2aW44v2aW44v2aW44v2aW44v2aW44v2aW44v2aW44");
 
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
