@@ -39,6 +39,22 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) to see the app.
 
+## Troubleshooting 🔧
+
+### "WebAuthn Not Supported" / TLS Errors
+Passkeys **require HTTPS**. On `localhost`, you might see connection errors.
+*   **Fix**: Deploy to Vercel/Netlify for a free HTTPS domain.
+*   **Workaround**: Use Chrome's `localhost` flag or just ignore the error if testing UI only.
+
+### "Insufficient Funds"
+New smart wallets start with 0 SOL.
+*   **Fix**: Use the built-in **"Request Airdrop"** button in the app header to get 1 Devnet SOL.
+
+## Session Persistence 💾
+This starter uses `@lazorkit/wallet` which automatically handles session persistence.
+*   After a refresh, `useWallet()` checks mostly localStorage/indexedDB for an existing session.
+*   The `useEffect` in `ConnectWallet.tsx` automatically reconnects the user if a session is found.
+
 ## Project Structure 📂
 
 ```
