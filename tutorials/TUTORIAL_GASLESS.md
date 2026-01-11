@@ -43,9 +43,20 @@ export function GaslessTransfer() {
     console.log("Transaction Sent:", signature);
   };
 
-  return <button onClick={sendFreeMoney}>Send Gasless</button>;
+  return (
+    <button onClick={sendFreeMoney}>
+        Send Gasless (Pay 0 SOL)
+    </button>
+  );
 }
 ```
+
+## Troubleshooting
+
+### Transaction Fails?
+*   **Check Paymaster**: Ensure your `paymasterUrl` in `LazorkitProviderWrapper` is correct.
+*   **Check Balance**: Even though you pay gas in USDC, you (or the paymaster) need funds. On Devnet, the Lazorkit Paymaster usually sponsors valid transactions.
+*   **Localhost**: Ensure you are not getting the TLS error (see README).
 
 ## Key Takeaways
 - You write code like a normal Solana app (creating instructions).

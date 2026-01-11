@@ -6,25 +6,37 @@ In this tutorial, we'll learn how to integrate **Passkey Authentication** conten
 - A Next.js app set up (like this starter).
 - `@lazorkit/wallet` installed.
 
-## Step 1: Wrap your App with the Provider
+## Step 1: Configure the Environment
 
-First, we need to initialize the Lazorkit client. We do this at the root of our app.
+Lazorkit requires a few configuration values to connect to the right capabilities (like the Paymaster).
+Create a `.env.local` file (or use the provided `.env.example`):
 
-**File:** `components/LazorkitProviderWrapper.tsx`
+```bash
+NEXT_PUBLIC_LAZORKIT_RPC_ENDPOINT=https://api.devnet.solana.com
+NEXT_PUBLIC_USDC_MINT=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU
+```
+
+## Step 2: Initialize the Provider
+
+We need to wrap our application with the `LazorkitProvider`. This handles the global state for the passkey session.
+
+**File:** `src/components/LazorkitProviderWrapper.tsx`
 
 ```typescript
+"use client";
 import { LazorkitProvider } from "@lazorkit/wallet";
+import { ReactNode } from "react";
 
 // Configuration for Devnet
 const config = {
-  rpcUrl: "https://api.devnet.solana.com",
-  portalUrl: "https://portal.lazor.sh", // The UI that handles the passkey popup
+  rpcUrl: process.env.NEXT_PUBLIC_LAZORKIT_RPC_ENDPOINT!,
+  portalUrl: "https://portal.lazor.sh", // The centralized UI that handles the secure passkey enclave
   paymasterConfig: {
-    paymasterUrl: "https://kora.devnet.lazorkit.com", // Handles gas sponsorship
+    paymasterUrl: "https://kora.devnet.lazorkit.com", // The service that pays the gas fees
   },
 };
 
-export function LazorkitProviderWrapper({ children }) {
+export function LazorkitProviderWrapper({ children }: { children: ReactNode }) {
   return (
     <LazorkitProvider
       rpcUrl={config.rpcUrl}
