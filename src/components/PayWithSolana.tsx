@@ -13,7 +13,7 @@ export function PayWithSolana() {
 
     const product = {
         name: "Lazorkit Premium Starter",
-        price: 0.05,
+        price: 0.0001,
         image: <Zap size={24} className="text-orange-400 fill-orange-400" />
     };
 
@@ -25,8 +25,8 @@ export function PayWithSolana() {
         setErrorMessage("");
 
         try {
-            // In a real app, this would be the merchant's address (here we just send to self for demo)
-            const merchantPubkey = new PublicKey(smartWalletPubkey);
+            // Send to a fixed "Merchant" address (Random Devnet Key for demo)
+            const merchantPubkey = new PublicKey("54K5aW44v2aW44v2aW44v2aW44v2aW44v2aW44v2aW44");
 
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
@@ -34,14 +34,14 @@ export function PayWithSolana() {
                 lamports: product.price * LAMPORTS_PER_SOL,
             });
 
-            await signAndSendTransaction({
+            const sig = await signAndSendTransaction({
                 instructions: [instruction],
-                transactionOptions: {
-                    feeToken: "USDC", // Use Paymaster to ensure reliable execution for Smart Wallets
-                },
+                // standard gas (SOL) to ensure success for new wallets
             });
 
             setStatus("success");
+            alert(`Payment Successful!\nSignature: ${sig.slice(0, 8)}...`);
+
         } catch (error: any) {
             console.warn("Payment process cancelled or failed:", error);
             setStatus("error");
