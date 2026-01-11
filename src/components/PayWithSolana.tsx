@@ -25,8 +25,8 @@ export function PayWithSolana() {
         setErrorMessage("");
 
         try {
-            // Send to a fixed "Merchant" address (Random Devnet Key for demo)
-            const merchantPubkey = new PublicKey("54K5aW44v2aW44v2aW44v2aW44v2aW44v2aW44v2aW44");
+            // Send to self (safe demo logic)
+            const merchantPubkey = new PublicKey(smartWalletPubkey);
 
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,

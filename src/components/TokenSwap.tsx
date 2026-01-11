@@ -1,18 +1,30 @@
 "use client";
 
 import { useWallet } from "@lazorkit/wallet";
-import { SystemProgram } from "@solana/web3.js";
+import { SystemProgram, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { ArrowDown, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function TokenSwap() {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
     const [isLoading, setIsLoading] = useState(false);
-    const [fromAmount, setFromAmount] = useState("1.00");
-    const [toAmount, setToAmount] = useState("148.50");
+    const [fromAmount, setFromAmount] = useState("0.0001");
+    const [toAmount, setToAmount] = useState("0.0148");
     const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
     const [signature, setSignature] = useState("");
     const [isSolToUsdc, setIsSolToUsdc] = useState(true);
+    const [balance, setBalance] = useState<number | null>(null);
+
+    // Fetch Real Balance
+    useEffect(() => {
+        if (isConnected && smartWalletPubkey) {
+            const connection = new Connection("https://api.devnet.solana.com", "confirmed");
+            const fetchBal = () => connection.getBalance(smartWalletPubkey).then((bal) => setBalance(bal / LAMPORTS_PER_SOL)).catch(console.error);
+            fetchBal();
+            const id = setInterval(fetchBal, 5000);
+            return () => clearInterval(id);
+        }
+    }, [isConnected, smartWalletPubkey]);
 
     const switchTokens = () => {
         setIsSolToUsdc(!isSolToUsdc);
@@ -24,7 +36,7 @@ export function TokenSwap() {
         setFromAmount(val);
         const rate = 148.5;
         if (isSolToUsdc) {
-            setToAmount((Number(val) * rate).toFixed(2));
+            setToAmount((Number(val) * rate).toFixed(4));
         } else {
             setToAmount((Number(val) / rate).toFixed(6));
         }
@@ -37,11 +49,11 @@ export function TokenSwap() {
         setStatus("idle");
 
         try {
-            // Mock transaction for demo
+            // Self-transfer 1000 lamports (tiny) to simulate activity
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
                 toPubkey: smartWalletPubkey,
-                lamports: 0,
+                lamports: 1000,
             });
 
             const txSig = await signAndSendTransaction({
@@ -50,6 +62,7 @@ export function TokenSwap() {
 
             setSignature(txSig);
             setStatus("success");
+            alert("Swap Confirmed! Transaction processed on Solana Devnet.");
         } catch (error) {
             console.error("Swap failed:", error);
             setStatus("error");
@@ -83,6 +96,9 @@ export function TokenSwap() {
                             </>
                         )}
                     </div>
+                </div>
+                <div className="px-2 text-xs text-gray-400 font-medium">
+                    Balance: {balance !== null ? balance.toFixed(4) : "..."} SOL
                 </div>
             </div>
 
@@ -120,6 +136,7 @@ export function TokenSwap() {
                         )}
                     </div>
                 </div>
+                <div className="px-2 text-xs text-gray-400 font-medium">Rate: 1 SOL ≈ $148.50</div>
             </div>
 
             {status === "success" ? (
