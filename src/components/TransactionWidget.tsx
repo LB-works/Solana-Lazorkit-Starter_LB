@@ -54,7 +54,7 @@ export function TransactionWidget() {
                     <div className="bg-gray-100/80 p-1.5 rounded-full flex gap-1 relative w-full">
                         <button
                             onClick={() => setActiveTab("swap")}
-                            className={`flex-1 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 ${activeTab === "swap"
+                            className={`flex-1 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === "swap"
                                 ? "bg-white text-[#7857ff] shadow-sm"
                                 : "text-gray-400 hover:text-gray-600"
                                 }`}
@@ -63,7 +63,7 @@ export function TransactionWidget() {
                         </button>
                         <button
                             onClick={() => setActiveTab("pay")}
-                            className={`flex-1 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 ${activeTab === "pay"
+                            className={`flex-1 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === "pay"
                                 ? "bg-white text-[#7857ff] shadow-sm"
                                 : "text-gray-400 hover:text-gray-600"
                                 }`}
@@ -72,7 +72,7 @@ export function TransactionWidget() {
                         </button>
                         <button
                             onClick={() => setActiveTab("subscribe")}
-                            className={`flex-1 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 ${activeTab === "subscribe"
+                            className={`flex-1 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === "subscribe"
                                 ? "bg-white text-[#7857ff] shadow-sm"
                                 : "text-gray-400 hover:text-gray-600"
                                 }`}
