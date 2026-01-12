@@ -36,16 +36,19 @@ export function TransactionWidget() {
             if (!container) return;
 
             const { scrollLeft, scrollWidth, clientWidth } = container;
-            setShowLeftArrow(scrollLeft > 2); // Small threshold
-            setShowRightArrow(Math.ceil(scrollLeft + clientWidth) < scrollWidth - 2);
+            const isOverflowing = scrollWidth > clientWidth;
+
+            setShowLeftArrow(isOverflowing && scrollLeft > 5);
+            setShowRightArrow(isOverflowing && Math.ceil(scrollLeft + clientWidth) < scrollWidth - 5);
         };
 
         checkOverflow();
         const container = tabContainerRef.current;
+
         if (container) {
             container.addEventListener("scroll", checkOverflow);
-            window.addEventListener("resize", checkOverflow);
         }
+        window.addEventListener("resize", checkOverflow);
 
         return () => {
             if (container) {
@@ -91,28 +94,32 @@ export function TransactionWidget() {
             <div className="bg-white rounded-[40px] shadow-[0_32px_80px_-20px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden relative transition-all duration-500">
 
                 {/* Scrollable Tabs with Navigation Arrows */}
-                <div className="relative group">
-                    {/* Left Arrow */}
-                    <button
-                        onClick={() => scrollTabs("left")}
-                        className={`absolute left-0 top-1/2 -translate-y-1/2 z-30 bg-gray-100/50 hover:bg-gray-200/80 backdrop-blur-sm border border-transparent rounded-r-lg p-1.5 transition-all duration-300 ${showLeftArrow ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"}`}
-                        aria-label="Scroll left"
-                    >
-                        <ChevronLeft size={16} className="text-gray-600" />
-                    </button>
+                <div className="relative group px-1">
+                    {/* Left Arrow - Only visible on overflow */}
+                    {showLeftArrow && (
+                        <button
+                            onClick={() => scrollTabs("left")}
+                            className="absolute left-1 top-1/2 -translate-y-1/2 z-30 bg-white shadow-md border border-gray-100 rounded-full p-1.5 hover:bg-gray-50 active:scale-95 transition-all animate-in fade-in zoom-in duration-200"
+                            aria-label="Scroll left"
+                        >
+                            <ChevronLeft size={16} className="text-gray-600" />
+                        </button>
+                    )}
 
-                    {/* Right Arrow */}
-                    <button
-                        onClick={() => scrollTabs("right")}
-                        className={`absolute right-0 top-1/2 -translate-y-1/2 z-30 bg-gray-100/50 hover:bg-gray-200/80 backdrop-blur-sm border border-transparent rounded-l-lg p-1.5 transition-all duration-300 ${showRightArrow ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4 pointer-events-none"}`}
-                        aria-label="Scroll right"
-                    >
-                        <ChevronRight size={16} className="text-gray-600" />
-                    </button>
+                    {/* Right Arrow - Only visible on overflow */}
+                    {showRightArrow && (
+                        <button
+                            onClick={() => scrollTabs("right")}
+                            className="absolute right-1 top-1/2 -translate-y-1/2 z-30 bg-white shadow-md border border-gray-100 rounded-full p-1.5 hover:bg-gray-50 active:scale-95 transition-all animate-in fade-in zoom-in duration-200"
+                            aria-label="Scroll right"
+                        >
+                            <ChevronRight size={16} className="text-gray-600" />
+                        </button>
+                    )}
 
                     <div
                         ref={tabContainerRef}
-                        className="px-5 pt-8 overflow-x-auto no-scrollbar scrollbar-hide bg-white scroll-smooth"
+                        className="px-4 pt-8 pb-2 overflow-x-auto no-scrollbar scrollbar-hide bg-white scroll-smooth"
                         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                     >
                         <div className="bg-gray-100/60 p-1 rounded-2xl flex gap-1 relative min-w-max">

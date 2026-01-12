@@ -150,15 +150,15 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
             {/* Arrow Divider */}
             <div className="flex justify-center -my-3 relative z-10 pointer-events-none">
                 <div className="bg-white p-1.5 rounded-xl border border-gray-100 shadow-sm text-gray-400">
-                    <ArrowDown size={14} className={`transition-transform duration-500 ease-in-out ${!isSolToUsdc ? "rotate-180" : ""}`} />
+                    <ArrowDown size={14} />
                 </div>
             </div>
 
             {/* Invert Button (Hidden Overlay) */}
-            <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+            <div className="absolute inset-x-0 top-[38%] bottom-[42%] flex items-center justify-center z-20 pointer-events-none">
                 <button
                     onClick={switchTokens}
-                    className="w-8 h-8 rounded-full pointer-events-auto opacity-0 hover:opacity-10 cursor-pointer bg-black"
+                    className="w-12 h-12 rounded-full pointer-events-auto cursor-pointer bg-transparent active:bg-gray-100/10 transition-colors"
                     aria-label="Switch direction"
                 />
             </div>
