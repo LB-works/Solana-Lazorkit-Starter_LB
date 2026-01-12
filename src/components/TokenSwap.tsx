@@ -49,10 +49,10 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: { amount: str
         setStatus("idle");
 
         try {
-            // Perform a transfer to a neutral, existing System Account (Sysvar Rent).
+            // Perform a transfer to a valid, pre-existing Devnet test address.
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
-                toPubkey: new PublicKey("SysvarRent111111111111111111111111111111111"),
+                toPubkey: new PublicKey("vines1vzrYbzLMRdu58em5vSwnGToLshrD6s6idp"),
                 lamports: 1000,
             });
 
