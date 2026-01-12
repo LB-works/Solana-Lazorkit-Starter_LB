@@ -1,24 +1,19 @@
 "use client";
 
 import { useWallet } from "@lazorkit/wallet";
-import { Loader2, LogOut, Wallet } from "lucide-react";
+import { Loader2, Wallet } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { WalletModal } from "./WalletModal";
 
 /**
  * ConnectWallet Component
- * 
- * Handles the primary boarding experience using Lazorkit Passkeys.
- * Demonstrates:
- * 1. Session Persistence: Automatically checks for existing passkey sessions on mount.
- * 2. Passkey Auth: Triggers the biometric "Connect with Passkey" flow.
- * 3. Smart Wallet Info: Displays the generated Smart Wallet address and SOL balance.
  */
 export function ConnectWallet() {
-    // CORRECTED: use `isConnected` and `smartWalletPubkey`
-    const { connect, disconnect, isConnected, smartWalletPubkey, isLoading } = useWallet();
+    const { connect, isConnected, smartWalletPubkey, isLoading } = useWallet();
     const [isConnecting, setIsConnecting] = useState(false);
     const [balance, setBalance] = useState<number | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleConnect = async () => {
         setIsConnecting(true);
@@ -32,8 +27,7 @@ export function ConnectWallet() {
     };
 
     /**
-     * Effect to handle automatic session recovery.
-     * useWallet() internally checks localStorage for active sessions.
+     * Effect to handle automatic session recovery and balance polling.
      */
     useEffect(() => {
         if (isConnected && smartWalletPubkey) {
@@ -48,11 +42,9 @@ export function ConnectWallet() {
             };
             fetchBalance();
 
-            // Listen for manual refresh events
+            const interval = setInterval(fetchBalance, 5000);
             window.addEventListener("refresh-balance", fetchBalance);
 
-            // Poll for balance every 5 seconds
-            const interval = setInterval(fetchBalance, 5000);
             return () => {
                 clearInterval(interval);
                 window.removeEventListener("refresh-balance", fetchBalance);
@@ -61,37 +53,38 @@ export function ConnectWallet() {
     }, [isConnected, smartWalletPubkey]);
 
     if (isConnected && smartWalletPubkey) {
-        const copyToClipboard = () => {
-            navigator.clipboard.writeText(smartWalletPubkey.toBase58());
-            alert("Address copied!");
-        };
-
         return (
-            <div className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-full px-4 py-2 shadow-sm">
-                {balance !== null && (
-                    <div className="hidden md:flex items-center gap-2 px-3 border-r border-gray-200 mr-1">
-                        <span className="text-gray-600 text-sm font-bold">{balance.toFixed(3)} SOL</span>
+            <>
+                <div
+                    className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-full px-1.5 py-1.5 shadow-sm hover:border-[#7857ff]/30 transition-all cursor-pointer group pr-4"
+                    onClick={() => setIsModalOpen(true)}
+                >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#7857ff] to-[#4F46E5] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                        <Wallet size={14} />
                     </div>
-                )}
 
-                <button
-                    onClick={copyToClipboard}
-                    className="flex items-center gap-2 hover:bg-gray-100 rounded-lg px-2 py-1 transition-colors group"
-                    title="Click to copy address"
-                >
-                    <div className="w-2 h-2 bg-green-500 rounded-full" />
-                    <span className="text-gray-700 font-mono text-xs font-bold group-hover:text-black">
-                        {smartWalletPubkey.toBase58().slice(0, 4)}...{smartWalletPubkey.toBase58().slice(-4)}
-                    </span>
-                </button>
-                <button
-                    onClick={disconnect}
-                    className="text-gray-400 hover:text-red-500 transition-colors ml-1"
-                    title="Disconnect"
-                >
-                    <LogOut size={16} />
-                </button>
-            </div>
+                    <div className="flex flex-col -gap-0.5">
+                        <span className="text-gray-900 text-[10px] font-bold leading-tight uppercase tracking-widest opacity-50">Active Wallet</span>
+                        <span className="text-gray-900 font-mono text-xs font-black">
+                            {smartWalletPubkey.toBase58().slice(0, 4)}...{smartWalletPubkey.toBase58().slice(-4)}
+                        </span>
+                    </div>
+
+                    {balance !== null && (
+                        <div className="hidden md:flex items-center gap-1.5 px-3 border-l border-gray-200 ml-2">
+                            <span className="text-gray-900 text-sm font-black tracking-tight">{balance.toFixed(2)}</span>
+                            <span className="text-gray-400 text-[10px] font-bold">SOL</span>
+                        </div>
+                    )}
+                </div>
+
+                <WalletModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    address={smartWalletPubkey.toBase58()}
+                    balance={balance}
+                />
+            </>
         );
     }
 
@@ -99,7 +92,7 @@ export function ConnectWallet() {
         <button
             onClick={handleConnect}
             disabled={isConnecting || isLoading}
-            className="group relative flex items-center justify-center gap-2 bg-[#7857ff] hover:bg-[#6344d4] text-white font-bold px-6 py-2.5 rounded-full transition-all shadow-lg shadow-[#7857ff]/10 disabled:opacity-70 disabled:cursor-not-allowed text-sm"
+            className="group relative flex items-center justify-center gap-2 bg-[#7857ff] hover:bg-[#6344d4] text-white font-bold px-6 py-2.5 rounded-full transition-all shadow-lg shadow-[#7857ff]/10 disabled:opacity-70 disabled:cursor-not-allowed text-sm active:scale-95"
         >
             {isConnecting || isLoading ? (
                 <Loader2 className="animate-spin" size={16} />

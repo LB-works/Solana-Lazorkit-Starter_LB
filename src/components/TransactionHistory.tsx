@@ -2,7 +2,7 @@ import { ExternalLink, XCircle, CheckCircle } from "lucide-react";
 
 export type TransactionRecord = {
     id: string;
-    type: "Swap" | "Pay";
+    type: "Swap" | "Pay" | "Send" | "Receive" | "Sub";
     amount: string; // e.g., "0.01 SOL" or "0.0001 USDC"
     status: "success" | "error";
     signature?: string;
