@@ -49,11 +49,10 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: { amount: str
         setStatus("idle");
 
         try {
-            // Perform a transfer to a fixed "Demo output" address.
-            // Using an existing address avoids Rent Exemption errors for new accounts.
+            // Perform a transfer to a neutral, existing System Account (Sysvar Rent).
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
-                toPubkey: new PublicKey("8X35rQUK2u9hfn8rMPwwr6ZSEUhbmfDPEapp589XyoM1"),
+                toPubkey: new PublicKey("SysvarRent111111111111111111111111111111111"),
                 lamports: 1000,
             });
 

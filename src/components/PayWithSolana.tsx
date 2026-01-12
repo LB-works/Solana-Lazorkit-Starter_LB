@@ -28,8 +28,9 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
             // Send to a fixed "Demo Merchant" address that already exists on Devnet.
             // Using an existing address avoids Rent Exemption errors for new accounts.
             // Using a distinct address (not self) avoids 0x2 Account Borrowed errors.
-            const merchantPubkey = new PublicKey("8X35rQUK2u9hfn8rMPwwr6ZSEUhbmfDPEapp589XyoM1");
-            // Note: This is an official devnet faucet/test address commonly used for demos.
+            const merchantPubkey = new PublicKey("SysvarRent111111111111111111111111111111111");
+            // Using a standard Sysvar account as the destination for demo purposes.
+            // This is neutral, exists on all networks, and is not associated with any competitor.
 
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
