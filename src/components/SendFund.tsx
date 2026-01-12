@@ -31,6 +31,15 @@ export function SendFund() {
         addLog("SIGNING", `Sending ${amount} ${token} to ${recipient.slice(0, 8)}...`);
 
         try {
+            /** 
+             * 📚 PATTERN: Gasless Multi-Asset Support
+             * In production, sending SPL tokens (like USDC) requires:
+             * 1. Finding or creating an Associated Token Account (ATA).
+             * 2. Constructing the transfer instruction.
+             * 
+             * Lazorkit's Paymaster handles both the transaction fees AND 
+             * the Rent (SOL) required to create the recipient's ATA.
+             */
             let instruction;
             if (token === "SOL") {
                 instruction = SystemProgram.transfer({
@@ -39,12 +48,12 @@ export function SendFund() {
                     lamports: Math.floor(Number(amount) * LAMPORTS_PER_SOL),
                 });
             } else {
-                // In production, use createTransferInstruction from @solana/spl-token
-                // Mocking with a minimal SOL transfer to recipient for demo purposes
+                // MOCK SPL TRANSFER: 
+                // Demonstrates the flow. In production, use @solana/spl-token
                 instruction = SystemProgram.transfer({
                     fromPubkey: smartWalletPubkey,
                     toPubkey: new PublicKey(recipient),
-                    lamports: 1000,
+                    lamports: 1000, // Minimal lamp to trigger signature request
                 });
             }
 

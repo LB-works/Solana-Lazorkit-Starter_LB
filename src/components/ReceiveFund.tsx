@@ -44,6 +44,20 @@ export function ReceiveFund() {
                 </button>
             </div>
 
+            <div className="w-full px-2 flex items-center justify-between">
+                <span className="text-gray-400 text-[9px] font-black uppercase tracking-widest">Supported Assets</span>
+                <div className="flex gap-2">
+                    <div className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
+                        <div className="w-3 h-3 bg-black rounded-full flex items-center justify-center text-[7px] text-white font-bold">◎</div>
+                        <span className="text-[9px] font-bold text-gray-600">SOL</span>
+                    </div>
+                    <div className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center text-[7px] text-white font-bold">$</div>
+                        <span className="text-[9px] font-bold text-gray-600">USDC</span>
+                    </div>
+                </div>
+            </div>
+
             <p className="text-gray-400 text-[10px] text-center px-8 font-bold leading-relaxed uppercase tracking-widest opacity-60">
                 Only send assets supported by the Solana Devnet to this address.
             </p>
