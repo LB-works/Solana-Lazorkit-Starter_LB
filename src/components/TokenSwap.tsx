@@ -49,13 +49,12 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: { amount: str
         setStatus("idle");
 
         try {
-            // Perform a real transfer to a random address (simulating a swap output).
-            // Using a distinct address avoids "Account Borrowed" (0x2) errors.
-            // Sending 0.01 SOL ensures the new account meets Rent Exemption requirements (min ~0.0009 SOL).
+            // Perform a transfer to a fixed "Demo output" address.
+            // Using an existing address avoids Rent Exemption errors for new accounts.
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
-                toPubkey: Keypair.generate().publicKey,
-                lamports: 0.01 * LAMPORTS_PER_SOL,
+                toPubkey: new PublicKey("8X35rQUK2u9hfn8rMPwwr6ZSEUhbmfDPEapp589XyoM1"),
+                lamports: 1000,
             });
 
             const txSig = await signAndSendTransaction({
