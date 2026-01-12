@@ -116,8 +116,8 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
         <div className="space-y-4">
             {/* You Pay Section */}
             <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                    <label className="text-gray-500 text-[10px] font-bold ml-1 uppercase tracking-wider">You pay</label>
+                <div className="flex justify-between items-center px-1">
+                    <label className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">You pay</label>
                     <span className="text-gray-400 text-[10px] font-bold">
                         Balance: {isSolToUsdc
                             ? (balance !== null ? `${balance.toFixed(3)} SOL` : '...')
@@ -148,13 +148,19 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
             </div>
 
             {/* Arrow Divider */}
-            <div className="flex justify-center -my-2 relative z-10">
+            <div className="flex justify-center -my-3 relative z-10 pointer-events-none">
+                <div className="bg-white p-1.5 rounded-xl border border-gray-100 shadow-sm text-gray-400">
+                    <ArrowDown size={14} className={`transition-transform duration-500 ease-in-out ${!isSolToUsdc ? "rotate-180" : ""}`} />
+                </div>
+            </div>
+
+            {/* Invert Button (Hidden Overlay) */}
+            <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
                 <button
                     onClick={switchTokens}
-                    className="bg-white p-2 rounded-xl border border-gray-100 shadow-sm text-gray-400 hover:text-[#7857ff] hover:border-[#7857ff]/30 transition-all active:scale-95"
-                >
-                    <ArrowDown size={14} className={`transition-transform duration-300 ${isSolToUsdc ? "" : "rotate-180"}`} />
-                </button>
+                    className="w-8 h-8 rounded-full pointer-events-auto opacity-0 hover:opacity-10 cursor-pointer bg-black"
+                    aria-label="Switch direction"
+                />
             </div>
 
             {/* You Receive Section */}

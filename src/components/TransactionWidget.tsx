@@ -36,8 +36,8 @@ export function TransactionWidget() {
             if (!container) return;
 
             const { scrollLeft, scrollWidth, clientWidth } = container;
-            setShowLeftArrow(scrollLeft > 10);
-            setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
+            setShowLeftArrow(scrollLeft > 2); // Small threshold
+            setShowRightArrow(Math.ceil(scrollLeft + clientWidth) < scrollWidth - 2);
         };
 
         checkOverflow();
@@ -91,32 +91,28 @@ export function TransactionWidget() {
             <div className="bg-white rounded-[40px] shadow-[0_32px_80px_-20px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden relative transition-all duration-500">
 
                 {/* Scrollable Tabs with Navigation Arrows */}
-                <div className="relative">
+                <div className="relative group">
                     {/* Left Arrow */}
-                    {showLeftArrow && (
-                        <button
-                            onClick={() => scrollTabs("left")}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 z-30 bg-white/90 hover:bg-white border border-gray-200 rounded-full p-1.5 shadow-md transition-all hover:scale-110 active:scale-95"
-                            aria-label="Scroll left"
-                        >
-                            <ChevronLeft size={14} className="text-gray-600" />
-                        </button>
-                    )}
+                    <button
+                        onClick={() => scrollTabs("left")}
+                        className={`absolute left-0 top-1/2 -translate-y-1/2 z-30 bg-gray-100/50 hover:bg-gray-200/80 backdrop-blur-sm border border-transparent rounded-r-lg p-1.5 transition-all duration-300 ${showLeftArrow ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"}`}
+                        aria-label="Scroll left"
+                    >
+                        <ChevronLeft size={16} className="text-gray-600" />
+                    </button>
 
                     {/* Right Arrow */}
-                    {showRightArrow && (
-                        <button
-                            onClick={() => scrollTabs("right")}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 z-30 bg-white/90 hover:bg-white border border-gray-200 rounded-full p-1.5 shadow-md transition-all hover:scale-110 active:scale-95"
-                            aria-label="Scroll right"
-                        >
-                            <ChevronRight size={14} className="text-gray-600" />
-                        </button>
-                    )}
+                    <button
+                        onClick={() => scrollTabs("right")}
+                        className={`absolute right-0 top-1/2 -translate-y-1/2 z-30 bg-gray-100/50 hover:bg-gray-200/80 backdrop-blur-sm border border-transparent rounded-l-lg p-1.5 transition-all duration-300 ${showRightArrow ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4 pointer-events-none"}`}
+                        aria-label="Scroll right"
+                    >
+                        <ChevronRight size={16} className="text-gray-600" />
+                    </button>
 
                     <div
                         ref={tabContainerRef}
-                        className="px-5 pt-8 overflow-x-auto no-scrollbar scrollbar-hide bg-white"
+                        className="px-5 pt-8 overflow-x-auto no-scrollbar scrollbar-hide bg-white scroll-smooth"
                         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                     >
                         <div className="bg-gray-100/60 p-1 rounded-2xl flex gap-1 relative min-w-max">
