@@ -128,7 +128,7 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
             </button>
 
             {!isConnected && (
-                <p className="text-center text-gray-400 text-xs mt-4 font-bold tracking-tight italic">
+                <p className="text-center text-gray-400 text-[10px] mt-3 font-bold uppercase tracking-widest italic leading-none">
                     Connect wallet to subscribe
                 </p>
             )}

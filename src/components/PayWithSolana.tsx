@@ -112,7 +112,7 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
             )}
 
             {!isConnected && status !== "success" && (
-                <p className="text-center text-gray-400 text-[10px] mt-3 font-bold uppercase tracking-wider">Connect wallet to proceed</p>
+                <p className="text-center text-gray-400 text-[10px] mt-3 font-bold uppercase tracking-widest italic leading-none">Connect wallet to proceed</p>
             )}
         </div>
     );
