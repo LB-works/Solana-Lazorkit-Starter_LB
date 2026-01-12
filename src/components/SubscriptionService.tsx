@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useWallet } from "@lazorkit/wallet";
 import { SystemProgram, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { Loader2, CreditCard, Check, ShieldCheck } from "lucide-react";
+import { useActivityLog } from "../hooks/useActivityLog";
 
 /**
  * SubscriptionService Component
@@ -15,6 +16,7 @@ import { Loader2, CreditCard, Check, ShieldCheck } from "lucide-react";
  */
 export function SubscriptionService({ onComplete }: { onComplete?: (details: { amount: string; status: "success" | "error"; signature?: string }) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
+    const { addLog } = useActivityLog();
     const [isLoading, setIsLoading] = useState(false);
     const [isAutoBilling, setIsAutoBilling] = useState(true);
     const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
@@ -30,6 +32,7 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
 
         setIsLoading(true);
         setStatus("idle");
+        addLog("SIGNING", `Subscribing to ${subscription.name} - ${subscription.price} SOL/${subscription.period}`);
 
         try {
             // Using the same stable merchant address from PayWithSolana
@@ -46,6 +49,7 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
             });
 
             setStatus("success");
+            addLog("SUCCESS", `Subscription activated! Auto-billing enabled for ${subscription.period}ly payments.`, { signature: sig });
             // Trigger balance refresh
             window.dispatchEvent(new Event("refresh-balance"));
 
@@ -59,6 +63,7 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
         } catch (error: any) {
             console.error("Subscription failed:", error);
             setStatus("error");
+            addLog("ERROR", `Subscription failed: ${error.message || 'User cancelled'}`);
             onComplete?.({
                 amount: `${subscription.price} SOL`,
                 status: "error"

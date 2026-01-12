@@ -10,7 +10,7 @@ export default function Home() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <main className="min-h-screen relative bg-white text-gray-900 selection:bg-[#7857ff]/10 selection:text-[#7857ff] font-['Inter',sans-serif]">
+        <main className="min-h-screen relative bg-white text-gray-900 selection:bg-[#7857ff]/10 selection:text-[#7857ff] font-['Inter',sans-serif] overflow-x-hidden">
 
             {/* Header */}
             <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">

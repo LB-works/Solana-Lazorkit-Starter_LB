@@ -4,6 +4,7 @@ import { useWallet } from "@lazorkit/wallet";
 import { SystemProgram, LAMPORTS_PER_SOL, PublicKey, Keypair } from "@solana/web3.js";
 import { Loader2, ShieldCheck, Zap } from "lucide-react";
 import { useState } from "react";
+import { useActivityLog } from "../hooks/useActivityLog";
 
 /**
  * PayWithSolana Component
@@ -14,6 +15,7 @@ import { useState } from "react";
  */
 export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount: string; status: "success" | "error"; signature?: string }) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
+    const { addLog } = useActivityLog();
     const [isLoading, setIsLoading] = useState(false);
     const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState("");
@@ -30,6 +32,7 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
         setIsLoading(true);
         setStatus("idle");
         setErrorMessage("");
+        addLog("SIGNING", `Processing payment of ${product.price} SOL for ${product.name}`);
 
         try {
             // Send to a fixed "Demo Merchant" address that already exists on Devnet.
@@ -51,6 +54,7 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
             });
 
             setStatus("success");
+            addLog("SUCCESS", `Payment successful! Saved ~0.002 SOL in gas fees.`, { signature: sig });
             // Trigger balance refresh
             window.dispatchEvent(new Event("refresh-balance"));
 
@@ -62,9 +66,10 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
             alert(`Payment Successful!\nSignature: ${sig.slice(0, 8)}...`);
 
         } catch (error: any) {
-            console.warn("Payment process cancelled or failed:", error);
+            console.error("Payment failed:", error);
             setStatus("error");
-            setErrorMessage(error?.message || "Payment failed. Please try again.");
+            setErrorMessage(error.message || "Transaction failed");
+            addLog("ERROR", `Payment failed: ${error.message || 'User cancelled'}`);
             onComplete?.({
                 amount: `${product.price} SOL`,
                 status: "error"
