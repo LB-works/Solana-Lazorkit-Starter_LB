@@ -13,7 +13,7 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
 
     const product = {
         name: "Lazorkit Premium Starter",
-        price: 0.0001, // Back to small amount for better compatibility
+        price: 0.05, // Increased amount as requested by user
         image: <Zap size={24} className="text-orange-400 fill-orange-400" />
     };
 
@@ -65,21 +65,22 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
     };
 
     return (
-        <div className="py-2">
-            <div className="flex items-center gap-4 mb-8 p-4 bg-gray-50 border border-gray-100 rounded-2xl">
-                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-sm border border-gray-100">
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Payment Card */}
+            <div className="bg-gray-50 border border-gray-100 rounded-3xl p-6 mb-8 flex items-center gap-4">
+                <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center shrink-0">
                     {product.image}
                 </div>
                 <div>
-                    <h4 className="text-gray-900 font-bold text-lg leading-tight mb-0.5">{product.name}</h4>
-                    <p className="text-gray-500 text-xs font-medium tracking-wide">Digital License</p>
+                    <h3 className="text-gray-900 font-bold text-lg leading-tight">{product.name}</h3>
+                    <p className="text-gray-500 text-sm font-medium">Digital License</p>
                 </div>
             </div>
 
             <div className="flex flex-col gap-1 mb-8 text-center">
                 <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">Total Amount</div>
-                <div className="text-gray-900 font-black text-4xl tracking-tight">0.0001 <span className="text-gray-400 text-2xl">SOL</span></div>
-                <div className="text-sm text-gray-500 font-medium">≈ $0.015 USD</div>
+                <div className="text-gray-900 font-black text-4xl tracking-tight">0.05 <span className="text-gray-400 text-2xl">SOL</span></div>
+                <div className="text-sm text-gray-500 font-medium">≈ $7.50 USD</div>
             </div>
 
             {status === "success" ? (

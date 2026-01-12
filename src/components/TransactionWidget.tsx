@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import { PayWithSolana } from "./PayWithSolana";
 import { TokenSwap } from "./TokenSwap";
+import { SubscriptionService } from "./SubscriptionService";
 import { TransactionHistory, TransactionRecord } from "./TransactionHistory";
-import { ShieldCheck, Zap, History } from "lucide-react";
+import { ShieldCheck, Zap, History, CreditCard } from "lucide-react";
 import { useWallet } from "@lazorkit/wallet";
 
 export function TransactionWidget() {
-    const [activeTab, setActiveTab] = useState<"swap" | "pay" | "history">("swap");
+    const [activeTab, setActiveTab] = useState<"swap" | "pay" | "subscribe" | "history">("swap");
     const { isConnected } = useWallet();
     const [history, setHistory] = useState<TransactionRecord[]>([]);
 
@@ -50,43 +51,54 @@ export function TransactionWidget() {
 
                 {/* Tabs */}
                 <div className="flex items-center justify-center p-2 mt-4">
-                    <div className="bg-gray-100/80 p-1.5 rounded-full flex gap-1 relative w-full max-w-[320px]">
+                    <div className="bg-gray-100/80 p-1.5 rounded-full flex gap-1 relative w-full">
                         <button
                             onClick={() => setActiveTab("swap")}
-                            className={`flex-1 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${activeTab === "swap"
-                                ? "bg-white text-black shadow-md"
-                                : "text-gray-500 hover:text-gray-700"
+                            className={`flex-1 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 ${activeTab === "swap"
+                                ? "bg-white text-[#7857ff] shadow-sm"
+                                : "text-gray-400 hover:text-gray-600"
                                 }`}
                         >
                             Swap
                         </button>
                         <button
                             onClick={() => setActiveTab("pay")}
-                            className={`flex-1 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${activeTab === "pay"
-                                ? "bg-white text-black shadow-md"
-                                : "text-gray-500 hover:text-gray-700"
+                            className={`flex-1 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 ${activeTab === "pay"
+                                ? "bg-white text-[#7857ff] shadow-sm"
+                                : "text-gray-400 hover:text-gray-600"
                                 }`}
                         >
                             Pay
                         </button>
                         <button
-                            onClick={() => setActiveTab("history")}
-                            className={`flex-1 py-2.5 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-1.5 ${activeTab === "history"
-                                ? "bg-white text-black shadow-md"
-                                : "text-gray-500 hover:text-gray-700"
+                            onClick={() => setActiveTab("subscribe")}
+                            className={`flex-1 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 ${activeTab === "subscribe"
+                                ? "bg-white text-[#7857ff] shadow-sm"
+                                : "text-gray-400 hover:text-gray-600"
                                 }`}
                         >
-                            <History size={14} /> History
+                            Sub
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("history")}
+                            className={`flex-1 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 ${activeTab === "history"
+                                ? "bg-white text-[#7857ff] shadow-sm"
+                                : "text-gray-400 hover:text-gray-600"
+                                }`}
+                        >
+                            <History size={12} />
                         </button>
                     </div>
                 </div>
 
                 {/* Content Area */}
-                <div className="p-6 min-h-[400px]">
+                <div className="p-6 min-h-[460px]">
                     {activeTab === "swap" ? (
                         <TokenSwap onComplete={(details) => addToHistory({ ...details, type: "Swap" })} />
                     ) : activeTab === "pay" ? (
                         <PayWithSolana onComplete={(details) => addToHistory({ ...details, type: "Pay" })} />
+                    ) : activeTab === "subscribe" ? (
+                        <SubscriptionService onComplete={(details) => addToHistory({ ...details, type: "Pay" })} />
                     ) : (
                         <TransactionHistory transactions={history} />
                     )}
