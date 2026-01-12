@@ -33,6 +33,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
     const [signature, setSignature] = useState("");
     const [isSolToUsdc, setIsSolToUsdc] = useState(true);
     const [balance, setBalance] = useState<number | null>(null);
+    const [usdcBalance, setUsdcBalance] = useState<number>(0); // Mock USDC balance
 
     const MOCK_RATES = {
         SOL_TO_USDC: 180.50,
@@ -45,6 +46,8 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
             const connection = new Connection("https://api.devnet.solana.com", "confirmed");
             const fetchBal = () => connection.getBalance(smartWalletPubkey).then((bal) => setBalance(bal / LAMPORTS_PER_SOL)).catch(console.error);
             fetchBal();
+            // Mock USDC balance for demo (in production, fetch from SPL token account)
+            setUsdcBalance(250.00);
             const id = setInterval(fetchBal, 5000);
             return () => clearInterval(id);
         }
@@ -113,9 +116,13 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
         <div className="space-y-4">
             {/* You Pay Section */}
             <div className="space-y-2">
-                <div className="flex justify-between items-center ml-1">
-                    <label className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">You pay</label>
-                    <span className="text-[10px] text-gray-400 font-bold">Balance: {balance?.toFixed(3) || "0.000"} SOL</span>
+                <div className="flex justify-between items-center">
+                    <label className="text-gray-500 text-[10px] font-bold ml-1 uppercase tracking-wider">You pay</label>
+                    <span className="text-gray-400 text-[10px] font-bold">
+                        Balance: {isSolToUsdc
+                            ? (balance !== null ? `${balance.toFixed(3)} SOL` : '...')
+                            : `${usdcBalance.toFixed(2)} USDC`}
+                    </span>
                 </div>
                 <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex items-center justify-between hover:border-gray-200 transition-colors focus-within:border-[#7857ff]/50 focus-within:ring-4 focus-within:ring-[#7857ff]/5 h-[80px]">
                     <input
@@ -146,7 +153,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
                     onClick={switchTokens}
                     className="bg-white p-2 rounded-xl border border-gray-100 shadow-sm text-gray-400 hover:text-[#7857ff] hover:border-[#7857ff]/30 transition-all active:scale-95"
                 >
-                    <ArrowDown size={14} className={isSolToUsdc ? "" : "rotate-180 transition-transform"} />
+                    <ArrowDown size={14} className={`transition-transform duration-300 ${isSolToUsdc ? "" : "rotate-180"}`} />
                 </button>
             </div>
 
@@ -197,7 +204,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
                 <button
                     onClick={handleSwap}
                     disabled={!isConnected || isLoading}
-                    className="w-full bg-[#7857ff] hover:bg-[#6344d4] text-white font-bold py-4 rounded-xl shadow-[0_4px_14px_0_rgba(120,87,255,0.3)] hover:shadow-[0_6px_20px_rgba(120,87,255,0.23)] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-lg mt-2"
+                    className="w-full bg-[#7857ff] hover:bg-[#6344d4] text-white font-bold py-4 rounded-xl shadow-[0_4px_14px_0_rgba(120,87,255,0.3)] hover:shadow-[0_6px_20px_rgba(120,87,255,0.23)] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-lg"
                 >
                     {isLoading ? (
                         <>
