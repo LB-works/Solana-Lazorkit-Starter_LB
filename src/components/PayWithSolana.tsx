@@ -5,7 +5,7 @@ import { SystemProgram, LAMPORTS_PER_SOL, PublicKey, Keypair } from "@solana/web
 import { Loader2, ShieldCheck, Zap } from "lucide-react";
 import { useState } from "react";
 
-export function PayWithSolana() {
+export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount: string; status: "success" | "error"; signature?: string }) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
     const [isLoading, setIsLoading] = useState(false);
     const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
@@ -41,12 +41,21 @@ export function PayWithSolana() {
             });
 
             setStatus("success");
+            onComplete?.({
+                amount: `${product.price} SOL`,
+                status: "success",
+                signature: sig
+            });
             alert(`Payment Successful!\nSignature: ${sig.slice(0, 8)}...`);
 
         } catch (error: any) {
             console.warn("Payment process cancelled or failed:", error);
             setStatus("error");
             setErrorMessage(error?.message || "Payment failed. Please try again.");
+            onComplete?.({
+                amount: `${product.price} SOL`,
+                status: "error"
+            });
         } finally {
             setIsLoading(false);
         }

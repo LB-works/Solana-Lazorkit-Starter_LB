@@ -5,7 +5,7 @@ import { SystemProgram, Connection, LAMPORTS_PER_SOL, PublicKey, Keypair } from 
 import { ArrowDown, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export function TokenSwap() {
+export function TokenSwap({ onComplete }: { onComplete?: (details: { amount: string; status: "success" | "error"; signature?: string }) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
     const [isLoading, setIsLoading] = useState(false);
     const [fromAmount, setFromAmount] = useState("0.0001");
@@ -64,10 +64,19 @@ export function TokenSwap() {
 
             setSignature(txSig);
             setStatus("success");
+            onComplete?.({
+                amount: `${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'}`,
+                status: "success",
+                signature: txSig
+            });
             alert("Swap Confirmed! Transaction processed on Solana Devnet.");
         } catch (error) {
             console.error("Swap failed:", error);
             setStatus("error");
+            onComplete?.({
+                amount: `${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'}`,
+                status: "error"
+            });
         } finally {
             setIsLoading(false);
         }

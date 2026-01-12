@@ -1,14 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PayWithSolana } from "./PayWithSolana";
 import { TokenSwap } from "./TokenSwap";
-import { ShieldCheck, Zap } from "lucide-react";
+import { TransactionHistory, TransactionRecord } from "./TransactionHistory";
+import { ShieldCheck, Zap, History } from "lucide-react";
 import { useWallet } from "@lazorkit/wallet";
 
 export function TransactionWidget() {
-    const [activeTab, setActiveTab] = useState<"swap" | "pay">("swap");
+    const [activeTab, setActiveTab] = useState<"swap" | "pay" | "history">("swap");
     const { isConnected } = useWallet();
+    const [history, setHistory] = useState<TransactionRecord[]>([]);
+
+    // Load history from local storage on mount
+    useEffect(() => {
+        const saved = localStorage.getItem("lazorkit_history");
+        if (saved) {
+            try {
+                setHistory(JSON.parse(saved));
+            } catch (e) {
+                console.error("Failed to parse history", e);
+            }
+        }
+    }, []);
+
+    const addToHistory = (record: Omit<TransactionRecord, "id" | "timestamp">) => {
+        const newRecord: TransactionRecord = {
+            ...record,
+            id: crypto.randomUUID(),
+            timestamp: Date.now(),
+        };
+        const updated = [newRecord, ...history];
+        setHistory(updated);
+        localStorage.setItem("lazorkit_history", JSON.stringify(updated));
+    };
 
     return (
         <div className="w-full max-w-[420px] mx-auto flex flex-col gap-6">
@@ -25,7 +50,7 @@ export function TransactionWidget() {
 
                 {/* Tabs */}
                 <div className="flex items-center justify-center p-2 mt-4">
-                    <div className="bg-gray-100/80 p-1.5 rounded-full flex gap-1 relative w-full max-w-[280px]">
+                    <div className="bg-gray-100/80 p-1.5 rounded-full flex gap-1 relative w-full max-w-[320px]">
                         <button
                             onClick={() => setActiveTab("swap")}
                             className={`flex-1 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${activeTab === "swap"
@@ -44,12 +69,27 @@ export function TransactionWidget() {
                         >
                             Pay
                         </button>
+                        <button
+                            onClick={() => setActiveTab("history")}
+                            className={`flex-1 py-2.5 rounded-full text-sm font-bold transition-all duration-300 flex items-center justify-center gap-1.5 ${activeTab === "history"
+                                ? "bg-white text-black shadow-md"
+                                : "text-gray-500 hover:text-gray-700"
+                                }`}
+                        >
+                            <History size={14} /> History
+                        </button>
                     </div>
                 </div>
 
                 {/* Content Area */}
-                <div className="p-6">
-                    {activeTab === "swap" ? <TokenSwap /> : <PayWithSolana />}
+                <div className="p-6 min-h-[400px]">
+                    {activeTab === "swap" ? (
+                        <TokenSwap onComplete={(details) => addToHistory({ ...details, type: "Swap" })} />
+                    ) : activeTab === "pay" ? (
+                        <PayWithSolana onComplete={(details) => addToHistory({ ...details, type: "Pay" })} />
+                    ) : (
+                        <TransactionHistory transactions={history} />
+                    )}
                 </div>
                 {/* Footer */}
                 <div className="bg-gray-50/50 border-t border-gray-100 p-5 text-center">
