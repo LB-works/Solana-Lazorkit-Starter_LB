@@ -46,7 +46,7 @@ export default function Home() {
                                 GitHub
                             </a>
                             <div className="h-4 w-px bg-gray-200 mx-1" />
-                            <Airdrop variant="compact" />
+                            <Airdrop />
                         </nav>
                         <ConnectWallet />
                     </div>
@@ -63,7 +63,7 @@ export default function Home() {
                                 GitHub Repository
                             </a>
                             <div className="pt-4 border-t border-gray-100">
-                                <Airdrop variant="full" />
+                                <Airdrop />
                             </div>
                         </nav>
                     </div>
