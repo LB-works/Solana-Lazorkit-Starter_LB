@@ -28,9 +28,9 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
             // Send to a fixed "Demo Merchant" address that already exists on Devnet.
             // Using an existing address avoids Rent Exemption errors for new accounts.
             // Using a distinct address (not self) avoids 0x2 Account Borrowed errors.
-            const merchantPubkey = new PublicKey("vines1vzrYbzLMRdu58em5vSwnGToLshrD6s6idp");
-            // Using a well-known Devnet test address.
-            // This is writable, pre-existing (avoids Rent errors), and distinct (avoids 0x2).
+            const merchantPubkey = new PublicKey("8X35rQUK2u9hfn8rMPwwr6ZSEUhbmfDPEapp589XyoM1");
+            // Using a verified 44-character Devnet address.
+            // This is writable, pre-existing, and distinct.
 
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,

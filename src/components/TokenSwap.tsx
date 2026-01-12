@@ -49,10 +49,10 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: { amount: str
         setStatus("idle");
 
         try {
-            // Perform a transfer to a valid, pre-existing Devnet test address.
+            // Perform a transfer to a valid, pre-existing 44-character Devnet address.
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
-                toPubkey: new PublicKey("vines1vzrYbzLMRdu58em5vSwnGToLshrD6s6idp"),
+                toPubkey: new PublicKey("8X35rQUK2u9hfn8rMPwwr6ZSEUhbmfDPEapp589XyoM1"),
                 lamports: 1000,
             });
 
