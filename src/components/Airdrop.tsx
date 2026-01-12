@@ -41,7 +41,7 @@ export function Airdrop() {
             href="https://faucet.solana.com/"
             target="_blank"
             rel="noreferrer"
-            className="bg-gray-50 hover:bg-gray-100 text-gray-900 font-bold px-4 py-2 rounded-xl text-xs border border-gray-200 transition-all flex items-center gap-2 shadow-sm active:scale-95 no-underline whitespace-nowrap"
+            className="bg-gray-50 hover:bg-gray-100 text-gray-900 font-bold px-4 py-2 rounded-xl text-xs border border-gray-200 transition-all flex items-center gap-2 shadow-sm active:scale-95 no-underline whitespace-nowrap w-fit"
         >
             Get SOL ↗
         </a>
