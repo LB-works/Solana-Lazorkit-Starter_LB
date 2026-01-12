@@ -5,6 +5,15 @@ import { SystemProgram, Connection, LAMPORTS_PER_SOL, PublicKey, Keypair } from 
 import { ArrowDown, Loader2, ShieldCheck, Wallet } from "lucide-react";
 import { useState, useEffect } from "react";
 
+/**
+ * TokenSwap Component
+ * 
+ * Demonstrates a complex transaction flow using the Lazorkit SDK.
+ * Highlights:
+ * 1. Gasless Execution: Fees are sponsored by the paymaster.
+ * 2. Dynamic Input: Calculates lamports from user entries.
+ * 3. Event-Driven UI: Refreshes balance via custom events after success.
+ */
 export function TokenSwap({ onComplete }: { onComplete?: (details: { amount: string; status: "success" | "error"; signature?: string }) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
     const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +51,11 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: { amount: str
         }
     };
 
+    /**
+     * Executes a gasless transaction to swap SOL for mock USDC.
+     * Features the useWallet().signAndSendTransaction() hook which
+     * abstracts away the gas fee sponsorship via the configured Paymaster.
+     */
     const handleSwap = async () => {
         if (!isConnected || !smartWalletPubkey) return;
 

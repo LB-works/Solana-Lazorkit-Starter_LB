@@ -23,6 +23,10 @@ Since this is a standard Next.js app, deployment is free and instant with **Verc
         *   Framework Preset: `Next.js` (Default)
         *   Root Directory: `.` (Default)
         *   Build Command: `npm run build` (Default)
+    *   **Environment Variables**:
+        *   Add the following keys (copy from `.env.example`):
+            *   `NEXT_PUBLIC_LAZORKIT_RPC_ENDPOINT`: `https://api.devnet.solana.com`
+            *   `NEXT_PUBLIC_USDC_MINT`: `4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU`
     *   Click **Deploy**.
 
 ## Option 2: Netlify

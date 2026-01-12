@@ -5,6 +5,13 @@ import { SystemProgram, LAMPORTS_PER_SOL, PublicKey, Keypair } from "@solana/web
 import { Loader2, ShieldCheck, Zap } from "lucide-react";
 import { useState } from "react";
 
+/**
+ * PayWithSolana Component
+ * 
+ * A reusable checkout widget demonstrating an e-commerce "Pay" flow.
+ * Uses the SDK's smart wallet to deliver a 1-click payment experience
+ * powered by passkeys.
+ */
 export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount: string; status: "success" | "error"; signature?: string }) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
     const [isLoading, setIsLoading] = useState(false);

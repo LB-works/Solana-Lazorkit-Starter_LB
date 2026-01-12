@@ -1,64 +1,58 @@
-# Tutorial: Triggering a Gasless Transaction
+# Tutorial: Sending Gasless Transactions 💨
 
-Users interacting with blockchain usually need SOL to pay for gas. This is a huge friction point. Lazorkit allows you to sponsor these fees or let users pay in other tokens (like USDC).
+Onboarding users to Solana usually requires them to have SOL for gas. This is a massive "bounce" point. Lazorkit removes this barrier.
 
-## The Concept
-Instead of a regular transaction, we send a **UserOperation** (or meta-transaction) to a **Paymaster**. The Paymaster pays the SOL gas fee, and in return, it can either:
-1. **Sponsor it** completely (Free for user).
-2. **Charge the user** in a token (e.g., take 1 USDC from the user).
+## The Mental Model: Meta-Transactions
 
-## Implementation
+Instead of you (the user) sending a transaction directly to the blockchain, you sign a **Request**. A specialized service called a **Paymaster** takes your signed request, wraps it in a transaction, pays the SOL fee, and submits it to the network.
 
-We use the `signAndSendTransaction` method from `useWallet`, but we pass special options.
-
-**File:** `components/GaslessTransfer.tsx`
-
-```typescript
-import { useWallet } from "@lazorkit/wallet";
-import { SystemProgram, PublicKey } from "@solana/web3.js";
-
-export function GaslessTransfer() {
-  // 1. Get the wallet interface
-  // use `smartWalletPubkey` instead of `publicKey`
-  const { signAndSendTransaction, smartWalletPubkey } = useWallet();
-
-  const sendFreeMoney = async () => {
-    // 2. Create a standard Solana Instruction
-    // This is the action we want to perform (e.g., Send 0.1 SOL)
-    const instruction = SystemProgram.transfer({
-      fromPubkey: smartWalletPubkey,
-      toPubkey: new PublicKey("RECIPIENT_ADDRESS..."),
-      lamports: 100000000, // 0.1 SOL
-    });
-
-    // 3. Send it with Fee Configuration
-    const signature = await signAndSendTransaction({
-      instructions: [instruction],
-      transactionOptions: {
-        // This magic line tells Lazorkit to use the USDC Paymaster
-        feeToken: "USDC" 
-      }
-    });
-
-    console.log("Transaction Sent:", signature);
-  };
-
-  return (
-    <button onClick={sendFreeMoney}>
-        Send Gasless (Pay 0 SOL)
-    </button>
-  );
-}
+### How it looks under the hood:
+```text
+[User App] --(Signed Request)--> [Lazorkit SDK] --(UserOp)--> [Paymaster] --(Tx + SOL Fee)--> [Solana]
 ```
 
-## Troubleshooting
+## Step 1: Initialize for Gasless
+In `LazorkitProviderWrapper.tsx`, ensure your `paymasterConfig` is set:
 
-### Transaction Fails?
-*   **Check Paymaster**: Ensure your `paymasterUrl` in `LazorkitProviderWrapper` is correct.
-*   **Check Balance**: Even though you pay gas in USDC, you (or the paymaster) need funds. On Devnet, the Lazorkit Paymaster usually sponsors valid transactions.
-*   **Localhost**: Ensure you are not getting the TLS error (see README).
+```tsx
+const config = {
+  // ...
+  paymasterConfig: {
+    paymasterUrl: "https://kora.devnet.lazorkit.com", 
+    // This URL identifies which Paymaster will sponsor the transactions
+  },
+};
+```
 
-## Key Takeaways
-- You write code like a normal Solana app (creating instructions).
-- You just change **how** you send it (`transactionOptions`).
-- The user sees a "Sign" prompt, but they don't need SOL in their wallet to pay for the network fee.
+## Step 2: Build your Transaction
+You build your transaction instructions EXACTLY like you would in a normal Solana app using `@solana/web3.js`.
+
+```tsx
+const instruction = SystemProgram.transfer({
+  fromPubkey: smartWalletPubkey,
+  toPubkey: recipient,
+  lamports: 1000000,
+});
+```
+
+## Step 3: Execute via SDK Hook
+Instead of using `sendAndConfirmTransaction`, use the SDK's `signAndSendTransaction`. This hook automatically handles the communication with the Paymaster.
+
+```tsx
+// src/components/GaslessTransfer.tsx
+const { signAndSendTransaction } = useWallet();
+
+const signature = await signAndSendTransaction({
+  instructions: [instruction],
+  transactionOptions: {
+    // Optional: Specify if the user should pay in a different token (e.g., USDC)
+    feeToken: "USDC" 
+  }
+});
+```
+
+## Real-World Use Case
+In this starter kit, we demonstrate this in the **"Gasless Transfer"** tab. Even if your smart wallet has **0.00 SOL**, you can successfully send a transaction (on Devnet) because the fees are sponsored! 
+
+## Pro-Tip for Judges 🏆
+Check the transaction signature on `Solana Explorer`. You'll notice the **Fee Payer** address is different from the sender's address—that's the Lazorkit Paymaster in action!

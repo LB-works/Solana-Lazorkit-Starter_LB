@@ -5,6 +5,14 @@ import { useWallet } from "@lazorkit/wallet";
 import { SystemProgram, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { Loader2, CreditCard, Check, ShieldCheck } from "lucide-react";
 
+/**
+ * SubscriptionService Component
+ * 
+ * Demonstrates recurring billing UX.
+ * Features:
+ * 1. Sponsored Initialization: Setting up the initial subscription without gas fees.
+ * 2. High UI Polish: Balanced layout for premium dApp feel.
+ */
 export function SubscriptionService({ onComplete }: { onComplete?: (details: { amount: string; status: "success" | "error"; signature?: string }) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
     const [isLoading, setIsLoading] = useState(false);

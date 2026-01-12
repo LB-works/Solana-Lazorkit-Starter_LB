@@ -17,6 +17,15 @@ const config = {
     },
 };
 
+/**
+ * LazorkitProviderWrapper
+ * 
+ * The root configuration for the Lazorkit SDK.
+ * Critical Setup:
+ * 1. Paymaster API: Enables gasless transactions for all child components.
+ * 2. Network Selection: Pre-configured for Solana Devnet.
+ * 3. RPC Endpoints: Uses a high-performance Devnet RPC for reliable UX.
+ */
 export function LazorkitProviderWrapper({ children }: { children: ReactNode }) {
     const [mounted, setMounted] = useState(false);
 

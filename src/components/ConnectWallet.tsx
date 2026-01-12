@@ -5,6 +5,15 @@ import { Loader2, LogOut, Wallet } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
+/**
+ * ConnectWallet Component
+ * 
+ * Handles the primary boarding experience using Lazorkit Passkeys.
+ * Demonstrates:
+ * 1. Session Persistence: Automatically checks for existing passkey sessions on mount.
+ * 2. Passkey Auth: Triggers the biometric "Connect with Passkey" flow.
+ * 3. Smart Wallet Info: Displays the generated Smart Wallet address and SOL balance.
+ */
 export function ConnectWallet() {
     // CORRECTED: use `isConnected` and `smartWalletPubkey`
     const { connect, disconnect, isConnected, smartWalletPubkey, isLoading } = useWallet();
@@ -22,6 +31,10 @@ export function ConnectWallet() {
         }
     };
 
+    /**
+     * Effect to handle automatic session recovery.
+     * useWallet() internally checks localStorage for active sessions.
+     */
     useEffect(() => {
         if (isConnected && smartWalletPubkey) {
             const fetchBalance = async () => {
