@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useWallet } from "@lazorkit/wallet";
 import { SystemProgram, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { Loader2, CreditCard, Check, Zap } from "lucide-react";
+import { Loader2, CreditCard, Check, ShieldCheck } from "lucide-react";
 
 export function SubscriptionService({ onComplete }: { onComplete?: (details: { amount: string; status: "success" | "error"; signature?: string }) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
@@ -38,6 +38,9 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
             });
 
             setStatus("success");
+            // Trigger balance refresh
+            window.dispatchEvent(new Event("refresh-balance"));
+
             onComplete?.({
                 amount: `${subscription.price} SOL`,
                 status: "success",
@@ -63,13 +66,13 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
             <div className="bg-[#7857ff]/5 border border-[#7857ff]/10 rounded-3xl p-6 mb-8">
                 <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center">
-                        <Zap size={24} className="text-[#7857ff] fill-[#7857ff]" />
+                        <ShieldCheck size={24} className="text-[#7857ff] fill-[#7857ff]/10" />
                     </div>
                     <span className="bg-[#7857ff] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Best Value</span>
                 </div>
                 <h3 className="text-gray-900 font-extrabold text-2xl tracking-tight mb-1">{subscription.name}</h3>
                 <div className="flex items-baseline gap-1">
-                    <span className="text-gray-900 font-black text-3xl">{subscription.price} SOL</span>
+                    <span className="text-[#7857ff] font-black text-3xl">{subscription.price} SOL</span>
                     <span className="text-gray-400 font-bold text-sm">/ {subscription.period}</span>
                 </div>
             </div>
@@ -110,8 +113,8 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
                 onClick={handleSubscribe}
                 disabled={!isConnected || isLoading}
                 className={`w-full py-4 rounded-2xl font-black text-lg transition-all shadow-[0_12px_24px_-8px_rgba(120,87,255,0.3)] flex items-center justify-center gap-2 ${!isConnected || isLoading
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-[#7857ff] text-white hover:bg-[#6646ff] hover:scale-[1.02] active:scale-[0.98]"
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-[#7857ff] text-white hover:bg-[#6646ff] hover:scale-[1.02] active:scale-[0.98]"
                     }`}
             >
                 {isLoading ? (

@@ -34,9 +34,16 @@ export function ConnectWallet() {
                 }
             };
             fetchBalance();
+
+            // Listen for manual refresh events
+            window.addEventListener("refresh-balance", fetchBalance);
+
             // Poll for balance every 5 seconds
             const interval = setInterval(fetchBalance, 5000);
-            return () => clearInterval(interval);
+            return () => {
+                clearInterval(interval);
+                window.removeEventListener("refresh-balance", fetchBalance);
+            };
         }
     }, [isConnected, smartWalletPubkey]);
 

@@ -14,7 +14,7 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
     const product = {
         name: "Lazorkit Premium Starter",
         price: 0.05, // Increased amount as requested by user
-        image: <Zap size={24} className="text-orange-400 fill-orange-400" />
+        image: <ShieldCheck size={24} className="text-[#7857ff] fill-[#7857ff]/10" />
     };
 
     const handlePayment = async () => {
@@ -44,6 +44,9 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
             });
 
             setStatus("success");
+            // Trigger balance refresh
+            window.dispatchEvent(new Event("refresh-balance"));
+
             onComplete?.({
                 amount: `${product.price} SOL`,
                 status: "success",
@@ -79,7 +82,7 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
 
             <div className="flex flex-col gap-1 mb-8 text-center">
                 <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">Total Amount</div>
-                <div className="text-gray-900 font-black text-4xl tracking-tight">0.05 <span className="text-gray-400 text-2xl">SOL</span></div>
+                <div className="text-gray-900 font-black text-4xl tracking-tight">0.05 <span className="text-[#7857ff] text-2xl">SOL</span></div>
                 <div className="text-sm text-gray-500 font-medium">≈ $7.50 USD</div>
             </div>
 
