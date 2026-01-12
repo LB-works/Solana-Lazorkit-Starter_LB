@@ -24,7 +24,12 @@ export function TransactionHistory({ transactions }: { transactions: Transaction
     }
 
     return (
-        <div className="space-y-3 animate-in fade-in">
+        <div className="space-y-3 animate-in fade-in max-h-[380px] overflow-y-auto pr-1 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <style jsx>{`
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+            `}</style>
             {transactions.map((tx) => (
                 <div key={tx.id} className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex items-center justify-between hover:border-gray-200 transition-colors">
                     <div className="flex items-center gap-3">

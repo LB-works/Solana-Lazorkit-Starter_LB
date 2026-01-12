@@ -92,16 +92,18 @@ export function TransactionWidget() {
                 </div>
 
                 {/* Content Area */}
-                <div className="p-6 min-h-[460px]">
-                    {activeTab === "swap" ? (
-                        <TokenSwap onComplete={(details) => addToHistory({ ...details, type: "Swap" })} />
-                    ) : activeTab === "pay" ? (
-                        <PayWithSolana onComplete={(details) => addToHistory({ ...details, type: "Pay" })} />
-                    ) : activeTab === "subscribe" ? (
-                        <SubscriptionService onComplete={(details) => addToHistory({ ...details, type: "Pay" })} />
-                    ) : (
-                        <TransactionHistory transactions={history} />
-                    )}
+                <div className="p-6 h-[440px] flex flex-col">
+                    <div className="flex-1 overflow-hidden">
+                        {activeTab === "swap" ? (
+                            <TokenSwap onComplete={(details) => addToHistory({ ...details, type: "Swap" })} />
+                        ) : activeTab === "pay" ? (
+                            <PayWithSolana onComplete={(details) => addToHistory({ ...details, type: "Pay" })} />
+                        ) : activeTab === "subscribe" ? (
+                            <SubscriptionService onComplete={(details) => addToHistory({ ...details, type: "Pay" })} />
+                        ) : (
+                            <TransactionHistory transactions={history} />
+                        )}
+                    </div>
                 </div>
                 {/* Footer */}
                 <div className="bg-gray-50/50 border-t border-gray-100 p-5 text-center">
