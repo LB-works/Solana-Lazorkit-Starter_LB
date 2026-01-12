@@ -81,7 +81,7 @@ export function TransactionWidget() {
     };
 
     return (
-        <div className="w-full max-w-[540px] mx-auto flex flex-col gap-6">
+        <div className="w-full max-w-[540px] md:max-w-2xl mx-auto flex flex-col gap-6">
             {/* Gasless Mode Indicator */}
             <div className="flex items-center justify-center gap-2">
                 <div className="bg-[#7857ff]/5 text-[#7857ff] px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 border border-[#7857ff]/10 shadow-sm transition-all hover:scale-105">

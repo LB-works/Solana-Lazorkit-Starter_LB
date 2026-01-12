@@ -185,7 +185,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
                     </div>
                 </div>
                 <div className="px-1 text-[10px] text-gray-400 font-bold flex justify-between">
-                    <span>Rate: 1 SOL ≈ ${MOCK_RATES.SOL_TO_USDC.toFixed(2)}</span>
+                    <span>Rate: 1 {isSolToUsdc ? 'SOL' : 'USDC'} ≈ {isSolToUsdc ? `$${MOCK_RATES.SOL_TO_USDC.toFixed(2)}` : `${MOCK_RATES.USDC_TO_SOL.toFixed(4)} SOL`}</span>
                     <span className="text-[#7857ff]">Gasless Active</span>
                 </div>
             </div>
@@ -200,7 +200,15 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
                         {signature}
                     </p>
                     <button
-                        onClick={() => setStatus("idle")}
+                        onClick={() => {
+                            // Update mock balances on reset
+                            if (!isSolToUsdc) {
+                                setUsdcBalance(prev => Math.max(0, prev - Number(fromAmount)));
+                            } else {
+                                setUsdcBalance(prev => prev + Number(toAmount));
+                            }
+                            setStatus("idle");
+                        }}
                         className="mt-3 w-full py-2 bg-green-600 text-white rounded-lg text-xs font-bold hover:bg-green-700 transition-colors"
                     >
                         New Swap

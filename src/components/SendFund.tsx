@@ -107,8 +107,8 @@ export function SendFund() {
                         type="button"
                         onClick={() => setToken("SOL")}
                         className={`flex-1 py-3 px-4 rounded-xl border transition-all font-bold text-sm flex items-center justify-center gap-2 ${token === "SOL"
-                                ? "bg-[#7857ff] text-white border-[#7857ff] shadow-sm"
-                                : "bg-gray-50 text-gray-600 border-gray-100 hover:border-gray-200"
+                            ? "bg-[#7857ff] text-white border-[#7857ff] shadow-sm"
+                            : "bg-gray-50 text-gray-600 border-gray-100 hover:border-gray-200"
                             }`}
                     >
                         <div className="w-4 h-4 bg-black rounded-full flex items-center justify-center text-[8px] text-white font-bold">◎</div>
@@ -118,8 +118,8 @@ export function SendFund() {
                         type="button"
                         onClick={() => setToken("USDC")}
                         className={`flex-1 py-3 px-4 rounded-xl border transition-all font-bold text-sm flex items-center justify-center gap-2 ${token === "USDC"
-                                ? "bg-[#7857ff] text-white border-[#7857ff] shadow-sm"
-                                : "bg-gray-50 text-gray-600 border-gray-100 hover:border-gray-200"
+                            ? "bg-[#7857ff] text-white border-[#7857ff] shadow-sm"
+                            : "bg-gray-50 text-gray-600 border-gray-100 hover:border-gray-200"
                             }`}
                     >
                         <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-[8px] text-white font-bold">$</div>
@@ -148,7 +148,7 @@ export function SendFund() {
                 <button
                     onClick={handleSend}
                     disabled={isLoading || !recipient || !amount}
-                    className="w-full bg-gray-900 hover:bg-black text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+                    className="w-full bg-[#7857ff] hover:bg-[#6344d4] text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
                 >
                     {isLoading ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
                     <span>{isLoading ? "Signing..." : `Send ${token}`}</span>
