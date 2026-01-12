@@ -92,7 +92,7 @@ export function TransactionWidget() {
                 </div>
 
                 {/* Content Area */}
-                <div className="p-6 h-[440px] flex flex-col">
+                <div className="p-6 h-[520px] flex flex-col">
                     <div className="flex-1 overflow-hidden">
                         {activeTab === "swap" ? (
                             <TokenSwap onComplete={(details) => addToHistory({ ...details, type: "Swap" })} />

@@ -1,40 +1,73 @@
+"use client";
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { TransactionWidget } from "@/components/TransactionWidget";
 import { Airdrop } from "@/components/Airdrop";
-import { Zap, ShieldCheck } from "lucide-react";
+import { Zap, ShieldCheck, Menu, X } from "lucide-react";
+import { useState } from "react";
 import Image from "next/image";
 
 export default function Home() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     return (
         <main className="min-h-screen relative bg-white text-gray-900 selection:bg-[#7857ff]/10 selection:text-[#7857ff] font-['Inter',sans-serif]">
 
             {/* Header */}
             <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="relative w-8 h-8 rounded-lg overflow-hidden">
-                            <Image
-                                src="/logo.png"
-                                alt="Lazorkit Logo"
-                                fill
-                                className="object-cover"
-                            />
+                    <div className="flex items-center gap-4">
+                        {/* Mobile Menu Trigger */}
+                        <button
+                            className="md:hidden p-2 -ml-2 text-gray-500"
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        >
+                            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                        </button>
+
+                        <div className="flex items-center gap-2">
+                            <div className="relative w-8 h-8 rounded-lg overflow-hidden">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Lazorkit Logo"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                            <span className="font-bold text-lg tracking-tight">Lazorkit</span>
                         </div>
-                        <span className="font-bold text-lg tracking-tight">Lazorkit</span>
                     </div>
 
-                    <div className="flex gap-6 items-center">
-                        <nav className="hidden md:flex items-center gap-6 mr-2">
+                    <div className="flex gap-4 items-center">
+                        <nav className="hidden md:flex items-center gap-6">
                             <a href="https://docs.lazorkit.com" target="_blank" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">
-                                Documentation
+                                Docs
                             </a>
-                            <a href="https://github.com/lazorkit" target="_blank" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">
+                            <a href="https://github.com/lazor-kit/lazor-kit" target="_blank" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">
                                 GitHub
                             </a>
+                            <div className="h-4 w-px bg-gray-200 mx-1" />
+                            <Airdrop />
                         </nav>
                         <ConnectWallet />
                     </div>
                 </div>
+
+                {/* Mobile Menu Overlay */}
+                {isMenuOpen && (
+                    <div className="md:hidden absolute top-16 left-0 right-0 bg-white border-b border-gray-100 p-6 animate-in slide-in-from-top-2 duration-200">
+                        <nav className="flex flex-col gap-4">
+                            <a href="https://docs.lazorkit.com" target="_blank" className="text-base font-bold text-gray-900">
+                                Documentation
+                            </a>
+                            <a href="https://github.com/lazor-kit/lazor-kit" target="_blank" className="text-base font-bold text-gray-900">
+                                GitHub Repository
+                            </a>
+                            <div className="pt-4 border-t border-gray-100">
+                                <Airdrop />
+                            </div>
+                        </nav>
+                    </div>
+                )}
             </header>
 
             <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center relative z-10">
@@ -84,7 +117,6 @@ export default function Home() {
                             <a href="https://docs.lazorkit.com" target="_blank" className="bg-[#7857ff] hover:bg-[#6344d4] text-white px-10 py-4 rounded-xl font-bold transition-all shadow-xl shadow-[#7857ff]/10 hover:shadow-[#7857ff]/20 active:scale-[0.98]">
                                 Read Documentation
                             </a>
-                            <Airdrop />
                         </div>
                     </div>
 

@@ -63,7 +63,7 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
     return (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Plan Header */}
-            <div className="bg-[#7857ff]/5 border border-[#7857ff]/10 rounded-3xl p-6 mb-8">
+            <div className="bg-[#7857ff]/5 border border-[#7857ff]/10 rounded-3xl p-5 mb-6">
                 <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center">
                         <ShieldCheck size={24} className="text-[#7857ff] fill-[#7857ff]/10" />
@@ -78,7 +78,7 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
             </div>
 
             {/* Features */}
-            <div className="space-y-3 mb-8 px-2">
+            <div className="space-y-2 mb-6 px-2">
                 {["Unlimited Gasless Tx", "Priority Support", "Advanced Analytics"].map((feature, i) => (
                     <div key={i} className="flex items-center gap-3">
                         <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center shrink-0">
@@ -90,7 +90,7 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
             </div>
 
             {/* Auto-billing Toggle */}
-            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-8 flex items-center justify-between">
+            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-white rounded-lg border border-gray-100 shadow-sm">
                         <CreditCard size={16} className="text-gray-400" />
