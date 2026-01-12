@@ -52,8 +52,8 @@ export function TransactionWidget() {
             <div className="bg-white rounded-[40px] shadow-[0_32px_80px_-20px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden relative transition-all duration-500">
 
                 {/* Scrollable Tabs */}
-                <div className="px-5 pt-8 overflow-x-auto no-scrollbar scrollbar-hide">
-                    <div className="bg-gray-100/60 p-1 rounded-2xl flex gap-1 relative w-full justify-between">
+                <div className="px-5 pt-8 overflow-x-auto no-scrollbar scrollbar-hide bg-white">
+                    <div className="bg-gray-100/60 p-1 rounded-2xl flex gap-1 relative min-w-max">
                         <button
                             onClick={() => setActiveTab("swap")}
                             className={`flex-1 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === "swap" ? "bg-white text-[#7857ff] shadow-sm" : "text-gray-400 hover:text-gray-600"}`}

@@ -89,28 +89,50 @@ export function SendFund() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <label className="text-gray-500 text-[10px] font-bold uppercase tracking-wider ml-1">Amount</label>
-                    <input
-                        type="number"
-                        placeholder="0.00"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 outline-none focus:border-[#7857ff] transition-colors text-sm font-bold"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <label className="text-gray-500 text-[10px] font-bold uppercase tracking-wider ml-1">Asset</label>
-                    <select
-                        value={token}
-                        onChange={(e) => setToken(e.target.value as any)}
-                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 outline-none focus:border-[#7857ff] transition-colors text-sm font-bold appearance-none cursor-pointer"
+            <div className="space-y-2">
+                <label className="text-gray-500 text-[10px] font-bold uppercase tracking-wider ml-1">Amount</label>
+                <input
+                    type="number"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 outline-none focus:border-[#7857ff] transition-colors text-sm font-bold"
+                />
+            </div>
+
+            <div className="space-y-2">
+                <label className="text-gray-500 text-[10px] font-bold uppercase tracking-wider ml-1">Select Asset</label>
+                <div className="flex gap-2">
+                    <button
+                        type="button"
+                        onClick={() => setToken("SOL")}
+                        className={`flex-1 py-3 px-4 rounded-xl border transition-all font-bold text-sm flex items-center justify-center gap-2 ${token === "SOL"
+                                ? "bg-[#7857ff] text-white border-[#7857ff] shadow-sm"
+                                : "bg-gray-50 text-gray-600 border-gray-100 hover:border-gray-200"
+                            }`}
                     >
-                        <option value="SOL">SOL</option>
-                        <option value="USDC">USDC (Mock)</option>
-                    </select>
+                        <div className="w-4 h-4 bg-black rounded-full flex items-center justify-center text-[8px] text-white font-bold">◎</div>
+                        SOL
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setToken("USDC")}
+                        className={`flex-1 py-3 px-4 rounded-xl border transition-all font-bold text-sm flex items-center justify-center gap-2 ${token === "USDC"
+                                ? "bg-[#7857ff] text-white border-[#7857ff] shadow-sm"
+                                : "bg-gray-50 text-gray-600 border-gray-100 hover:border-gray-200"
+                            }`}
+                    >
+                        <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-[8px] text-white font-bold">$</div>
+                        USDC
+                    </button>
                 </div>
+                {token === "USDC" && (
+                    <div className="bg-blue-50 border border-blue-100 rounded-lg p-2 mt-2">
+                        <p className="text-blue-700 text-[10px] font-bold leading-relaxed">
+                            💡 <span className="font-black">USDC (Mock)</span> is a simulated SPL token for demo purposes. It showcases gasless transfers and SDK flows. Not real USDC.
+                        </p>
+                    </div>
+                )}
             </div>
 
             {status === "success" ? (

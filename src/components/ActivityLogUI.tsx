@@ -49,7 +49,7 @@ export function ActivityLogUI() {
                 </button>
             </div>
 
-            <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1 custom-scrollbar">
+            <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1 scrollbar-hide">
                 {logs.map((log) => (
                     <div
                         key={log.id}
@@ -61,7 +61,7 @@ export function ActivityLogUI() {
                         <div className="flex-1 space-y-1">
                             <div className="flex justify-between items-center">
                                 <span className={`text-[10px] font-black tracking-tight ${log.type === 'SUCCESS' ? 'text-green-700' :
-                                        log.type === 'ERROR' ? 'text-red-700' : 'text-gray-600'
+                                    log.type === 'ERROR' ? 'text-red-700' : 'text-gray-600'
                                     }`}>
                                     {log.type}
                                 </span>
