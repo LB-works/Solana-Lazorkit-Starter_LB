@@ -69,7 +69,7 @@ _Gasless SOL/USDC transfers - Paymaster sponsors_
 ### Token Swap
 
 ![Swap](images/swap.png)
-_Bidirectional SOL_
+_Bidirectional SOL↔USDC_
 
 ### Transaction Activity Log
 
