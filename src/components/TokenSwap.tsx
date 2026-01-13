@@ -5,7 +5,7 @@ import { SystemProgram, Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/
 import { ArrowDown, Loader2, ShieldCheck } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useActivityLog } from "../hooks/useActivityLog";
-import { useMockUSDC } from "../hooks/useMockUSDC";
+import { useUSDC } from "../hooks/useUSDC";
 
 /**
  * ═══════════════════════════════════════════════════════════════
@@ -27,7 +27,7 @@ import { useMockUSDC } from "../hooks/useMockUSDC";
 export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
     const { addLog } = useActivityLog();
-    const { balance: usdcBalance, updateBalance } = useMockUSDC();
+    const { balance: usdcBalance, updateBalance } = useUSDC();
     const [isLoading, setIsLoading] = useState(false);
     const [fromAmount, setFromAmount] = useState("0.01");
     const [toAmount, setToAmount] = useState("1.80");
@@ -103,6 +103,9 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
             addLog("SUCCESS", `Swapped ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} for ${toAmount} ${isSolToUsdc ? 'USDC' : 'SOL'}`, { signature: txSig });
 
             window.dispatchEvent(new Event("refresh-balance"));
+            // Force refresh of USDC hook
+            updateBalance();
+
             const description = `${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} → ${toAmount} ${isSolToUsdc ? 'USDC' : 'SOL'}`;
             onComplete?.({
                 amount: description,
@@ -209,9 +212,9 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
                     <button
                         onClick={() => {
                             if (!isSolToUsdc) {
-                                updateBalance(Number(fromAmount), 'debit');
+                                updateBalance();
                             } else {
-                                updateBalance(Number(toAmount), 'credit');
+                                updateBalance();
                             }
                             setStatus("idle");
                             setErrorMessage("");
