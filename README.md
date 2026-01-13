@@ -8,7 +8,7 @@ A production-ready starter template for building Solana applications with passke
 
 ## Live Demo
 
-🌐 **Try it now:** [https://solanalazorkitstarter.vercel.app/]
+🌐 **Try it now:** [solanalazorkitstarter]
 
 **No installation required** - Test passkey auth and gasless transactions directly in your browser.
 
