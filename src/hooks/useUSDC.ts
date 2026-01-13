@@ -31,6 +31,7 @@ export function useUSDC() {
             }
 
             setBalance(total);
+            localStorage.setItem("lazorkit_usdc_balance", total.toString());
         } catch (error) {
             console.error("Failed to fetch USDC balance:", error);
             // Do NOT reset balance to 0 on error - keep previous valid state
@@ -39,8 +40,13 @@ export function useUSDC() {
         }
     }, [isConnected, smartWalletPubkey]);
 
-    // Initial fetch
+    // Initial fetch & Hydrate
     useEffect(() => {
+        // Hydrate from storage immediately for instant UI
+        const stored = localStorage.getItem("lazorkit_usdc_balance");
+        if (stored) {
+            setBalance(parseFloat(stored));
+        }
         fetchBalance();
     }, [fetchBalance]);
 
