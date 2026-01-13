@@ -101,7 +101,12 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
             addLog("SUCCESS", `Swapped ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} for ${toAmount} ${isSolToUsdc ? 'USDC' : 'SOL'}`, { signature: txSig });
 
             window.dispatchEvent(new Event("refresh-balance"));
-            onComplete?.({ amount: fromAmount, status: "success", signature: txSig });
+            const description = `${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} → ${toAmount} ${isSolToUsdc ? 'USDC' : 'SOL'}`;
+            onComplete?.({
+                amount: description,
+                status: "success",
+                signature: txSig
+            });
         } catch (error: any) {
             console.error("Swap failed:", error);
             setStatus("error");

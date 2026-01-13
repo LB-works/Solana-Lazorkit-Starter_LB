@@ -5,7 +5,7 @@ import { Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { useEffect, useRef } from "react";
 import { useActivityLog } from "./useActivityLog";
 
-export function useBalanceWatcher() {
+export function useBalanceWatcher(onReceive?: (amount: number) => void) {
     const { isConnected, smartWalletPubkey } = useWallet();
     const { addLog } = useActivityLog();
     const prevBalanceRef = useRef<number | null>(null);
@@ -25,6 +25,7 @@ export function useBalanceWatcher() {
                     // If balance increased by more than 0.000001 (dust filter)
                     if (diff > 0.000001) {
                         addLog("INFO", `Received ${diff.toFixed(4)} SOL`);
+                        onReceive?.(diff);
                     }
                 }
                 prevBalanceRef.current = solBal;

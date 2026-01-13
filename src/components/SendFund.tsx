@@ -15,7 +15,7 @@ import { useMockUSDC } from "../hooks/useMockUSDC";
  * • How paymasters sponsor transaction fees (0 SOL required).
  * • How to implement form validation for blockchain addresses.
  */
-export function SendFund() {
+export function SendFund({ onComplete }: { onComplete?: (details: any) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
     const { addLog } = useActivityLog();
     const { balance: usdcBalance, updateBalance } = useMockUSDC();
@@ -65,8 +65,15 @@ export function SendFund() {
             });
 
             setStatus("success");
-            addLog("SUCCESS", `Sent ${amount} ${token} gaslessly!`, { signature });
+            const successMsg = `Sent ${amount} ${token}`;
+            addLog("SUCCESS", `${successMsg} gaslessly!`, { signature });
             window.dispatchEvent(new Event("refresh-balance"));
+
+            onComplete?.({
+                amount: `${amount} ${token}`,
+                status: "success",
+                signature
+            });
         } catch (error: any) {
             console.error("Transfer failed:", error);
             setStatus("error");
