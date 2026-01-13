@@ -31,7 +31,9 @@ export function useUSDC() {
             }
 
             setBalance(total);
-            localStorage.setItem("lazorkit_usdc_balance", total.toString());
+            if (smartWalletPubkey) {
+                localStorage.setItem(`lazorkit_usdc_balance_${smartWalletPubkey.toBase58()}`, total.toString());
+            }
         } catch (error) {
             console.error("Failed to fetch USDC balance:", error);
             // Do NOT reset balance to 0 on error - keep previous valid state
@@ -42,13 +44,16 @@ export function useUSDC() {
 
     // Initial fetch & Hydrate
     useEffect(() => {
-        // Hydrate from storage immediately for instant UI
-        const stored = localStorage.getItem("lazorkit_usdc_balance");
+        if (!smartWalletPubkey) return;
+        
+        // Hydrate from storage specific to this wallet
+        const storageKey = `lazorkit_usdc_balance_${smartWalletPubkey.toBase58()}`;
+        const stored = localStorage.getItem(storageKey);
         if (stored) {
             setBalance(parseFloat(stored));
         }
         fetchBalance();
-    }, [fetchBalance]);
+    }, [fetchBalance, smartWalletPubkey]);
 
     // Poll for updates (e.g., after standard transfers)
     useEffect(() => {

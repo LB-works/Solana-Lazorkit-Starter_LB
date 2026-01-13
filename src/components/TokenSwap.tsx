@@ -100,7 +100,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
 
             setSignature(txSig);
             setStatus("success");
-            addLog("SUCCESS", `Swapped ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} for ${toAmount} ${isSolToUsdc ? 'USDC' : 'SOL'}`, { signature: txSig });
+            addLog("SUCCESS", `Swapped ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} (Demo Simulation)`, { signature: txSig });
 
             window.dispatchEvent(new Event("refresh-balance"));
             // Force refresh of USDC hook
@@ -209,6 +209,9 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
                     <p className="text-[10px] text-green-600 font-mono break-all opacity-80">
                         {signature}
                     </p>
+                    <div className="mt-2 text-[10px] text-gray-400 bg-white/50 p-2 rounded border border-green-100">
+                        * Note: This is a Devnet simulation. Real DEX integration requires Jupiter API. Your balances won't change on-chain.
+                    </div>
                     <button
                         onClick={() => {
                             if (!isSolToUsdc) {
