@@ -8,7 +8,7 @@ A production-ready starter template for building Solana applications with passke
 
 ## Live Demo
 
-🌐 **Try it now:** [solanalazorkitstarter]
+🌐 **Try it now:** [solanalazorkitstarter](https://solanalazorkitstarter.vercel.app)
 
 **No installation required** - Test passkey auth and gasless transactions directly in your browser.
 
@@ -34,7 +34,6 @@ This starter demonstrates **real-world production patterns** that other template
 2. **Robust Balance Watching** - Multi-asset receive detection tracks both SOL and USDC transfers
 3. **Wallet-Scoped Persistence** - LocalStorage keyed by wallet address prevents multi-wallet bugs
 4. **Full Session Management** - Disconnect button with complete state cleanup
-5. **Simulation Transparency** - Clear labeling distinguishes demo transactions from real ones
 
 **Built for developers who need to ship production apps, not just demos.**
 
@@ -65,22 +64,22 @@ _Active wallet showing SOL and USDC balances with session management_
 ### Send Transaction (Gasless)
 
 ![Send](images/send.png)
-_Gasless SOL/USDC transfers - user pays 0 fees, Paymaster sponsors_
+_Gasless SOL/USDC transfers - Paymaster sponsors_
 
 ### Token Swap
 
 ![Swap](images/swap.png)
-_Bidirectional SOL ↔ USDC swaps (Demo Simulation labeled for transparency)_
+_Bidirectional SOL_
 
 ### Transaction Activity Log
 
 ![Activity Log](images/log.png)
-_Real-time multi-asset tracking with Solana Explorer links_
+_Real-time multi-asset tracking_
 
 ### Transaction History
 
 ![Transaction History](images/txn%20history.png)
-_Comprehensive transaction history with status indicators_
+_Comprehensive transaction history with status indicators and Solana Explorer links_
 
 ### Gasless Proof (Solana Explorer)
 
