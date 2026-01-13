@@ -36,5 +36,5 @@ useEffect(() => {
 - **Hardware Bound**: Even if a physical device is stolen, the passkey is protected by Biometrics (FaceID/TouchID).
 - **No Seed Phrases**: No plain-text keys are stored in local storage, reducing attack surface.
 
-## Pro-Tip for Judges 🏆
-Test this by logging in, refreshing the page, and watching the balance area. You'll notice you stay logged in seamlessly—this is the **10x UX** in action!
+## Pro-Tip 🏆
+Test this by logging in, refreshing the page, and watching the balance area. You'll notice you stay logged in seamlessly,this is the **10x UX** in action!

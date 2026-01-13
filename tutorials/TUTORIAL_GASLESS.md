@@ -52,7 +52,7 @@ const signature = await signAndSendTransaction({
 ```
 
 ## Real-World Use Case
-In this starter kit, we demonstrate this in the **"Gasless Transfer"** tab. Even if your smart wallet has **0.00 SOL**, you can successfully send a transaction (on Devnet) because the fees are sponsored! 
+In this starter kit, we demonstrate this in the **"Gasless Transfer"** tab. You can successfully send a transaction (on Devnet) because the fees are sponsored! 
 
-## Pro-Tip for Judges 🏆
-Check the transaction signature on `Solana Explorer`. You'll notice the **Fee Payer** address is different from the sender's address—that's the Lazorkit Paymaster in action!
+## Pro-Tip 🏆
+Check the transaction signature on `Solana Explorer`. You'll notice the **Fee Payer** address is different from the sender's address.

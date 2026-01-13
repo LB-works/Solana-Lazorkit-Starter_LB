@@ -4,13 +4,13 @@ A high-performance, UX-first starter template for building Solana applications w
 
 ## 🏆 Why Choose This Template?
 
-| Learning Pattern | This Template | Other Starters | Educational Value |
+| Learning Pattern | This Template | Educational Value |
 |------------------|---------------|----------------|-------------------|
 | **Bidirectional Swaps** | ✅ Full implementation | ❌ Not included | Master dynamic transaction construction |
-| **Activity Timeline** | ✅ Live event logging | ⚠️ Basic only | Understand UserOperation lifecycle |
+| **Activity Timeline** | ✅ Live event logging | Understand UserOperation lifecycle |
 | **Feature Gating** | ✅ Subscription hook | ❌ Not included | Learn wallet-based access control |
-| **Multi-Asset Send** | ✅ SOL + USDC | ⚠️ SOL only | Master SPL token patterns |
-| **Gasless Everywhere** | ✅ All transactions | ⚠️ Limited | True Web2 UX experience |
+| **Multi-Asset Send** | ✅ SOL + USDC | Master SPL token patterns |
+| **Gasless Everywhere** | ✅ All transactions | True Web2 UX experience |
 
 ---
 
@@ -74,13 +74,13 @@ sequenceDiagram
 
 ---
 
-## 📊 Traditional UX vs. Lazorkit UX
-| Feature | Traditional Wallet (Phantom/Solflare) | Lazorkit (Passkey-First) |
-| :--- | :--- | :--- |
-| **Setup** | Download extension, write 24 words | 2 seconds (Biometric Prompt) |
-| **Gas Fees** | User must hold SOL | Sponsored or Fee-Tokens (USDC) |
-| **Auth** | Password + Approval | FaceID / TouchID |
-| **Onboarding** | 5 - 10 Minutes | **< 30 Seconds** |
+## 📊 TLazorkit UX
+| Feature | Lazorkit (Passkey-First) |
+| :--- | :--- |
+| **Setup** | 2 seconds (Biometric Prompt) |
+| **Gas Fees** | Sponsored or Fee-Tokens (USDC) |
+| **Auth** | FaceID / TouchID |
+| **Onboarding** | **< 30 Seconds** |
 | **Security** | Seed phrase vulnerability | Hardware-bound (Secure Enclave) |
 | **Device Support** | Desktop (Extension) / Mobile (App) | Native browser support everywhere |
 
