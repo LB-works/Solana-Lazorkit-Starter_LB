@@ -11,7 +11,13 @@ import { TransactionHistory, TransactionRecord } from "./TransactionHistory";
 import { ShieldCheck, History, Send, Download, RefreshCw, Smartphone, ClipboardList, ChevronLeft, ChevronRight } from "lucide-react";
 import { useWallet } from "@lazorkit/wallet";
 
+import { useBalanceWatcher } from "../hooks/useBalanceWatcher";
+
 export function TransactionWidget() {
+    // Enable observation of balance changes
+    useBalanceWatcher();
+
+    // State for tabs and arrowsetActiveTab] = useState<"swap" | "send" | "receive" | "pay" | "log" | "history">("swap");
     const [activeTab, setActiveTab] = useState<"swap" | "send" | "receive" | "pay" | "log" | "history">("swap");
     const { isConnected } = useWallet();
     const [history, setHistory] = useState<TransactionRecord[]>([]);
