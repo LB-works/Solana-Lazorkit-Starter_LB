@@ -87,6 +87,7 @@ export function TransactionWidget() {
             type: "Receive",
             amount: `${asset === "USDC" ? amount.toFixed(2) : amount.toFixed(4)} ${asset}`,
             status: "success",
+            // If it's a generic token, say "Received Token", otherwise "Received USDC/SOL"
             description: `Received ${asset} from external wallet`
         });
     });

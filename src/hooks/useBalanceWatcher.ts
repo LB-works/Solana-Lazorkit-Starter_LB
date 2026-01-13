@@ -5,11 +5,12 @@ import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useEffect, useRef } from "react";
 import { useActivityLog } from "./useActivityLog";
 
-export function useBalanceWatcher(onReceive?: (amount: number, asset: "SOL" | "USDC") => void) {
+export function useBalanceWatcher(onReceive?: (amount: number, asset: "SOL" | "USDC" | "Token") => void) {
     const { isConnected, smartWalletPubkey } = useWallet();
     const { addLog } = useActivityLog();
     const prevSolBalanceRef = useRef<number | null>(null);
-    const prevUsdcBalanceRef = useRef<number | null>(null);
+    // Store mint -> balance
+    const prevTokenBalancesRef = useRef<Map<string, number>>(new Map());
 
     useEffect(() => {
         if (!isConnected || !smartWalletPubkey) return;
@@ -24,43 +25,45 @@ export function useBalanceWatcher(onReceive?: (amount: number, asset: "SOL" | "U
 
                 if (prevSolBalanceRef.current !== null) {
                     const diff = solBal - prevSolBalanceRef.current;
-                    if (diff > 0.001) { // Higher threshold to avoid rent noise
+                    if (diff > 0.001) {
                         addLog("INFO", `Received ${diff.toFixed(4)} SOL`);
                         onReceive?.(diff, "SOL");
                     }
                 }
                 prevSolBalanceRef.current = solBal;
 
-                // 2. Check USDC (SPL Tokens)
-                // We fetch all parsed token accounts to find USDC-like ones
+                // 2. Check ALL SPL Tokens
                 const tokenAccounts = await connection.getParsedTokenAccountsByOwner(smartWalletPubkey, {
                     programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
                 });
 
-                let totalUsdc = 0;
-                // Sum up common USDC devnet mints or just all "USDC" named tokens if we could parse metadata
-                // For this pattern, we'll check for the known USDC devnet mint used in Lazorkit demos
-                // Mint: 4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU (Circle Devnet USDC)
-                // OR just any token with decimals=6 for a generic "USD-like" check if mint unknown
+                const currentBalances = new Map<string, number>();
 
                 for (const { account } of tokenAccounts.value) {
                     const info = account.data.parsed.info;
                     const mint = info.mint;
-                    // Check for standard Devnet USDC mint
-                    // Also check for the mock mint likely used in TokenSwap: "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
-                    if (mint === "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU" || mint === "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr") {
-                        totalUsdc += info.tokenAmount.uiAmount || 0;
+                    const amount = info.tokenAmount.uiAmount || 0;
+                    currentBalances.set(mint, amount);
+
+                    // If we have history for this mint, check for change
+                    if (prevTokenBalancesRef.current.has(mint)) {
+                        const prev = prevTokenBalancesRef.current.get(mint) || 0;
+                        const diff = amount - prev;
+
+                        // Detect increase (Received)
+                        if (diff > 0) {
+                            const isUSDC = mint === "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
+                            const assetName = isUSDC ? "USDC" : "Token";
+
+                            // Log it
+                            addLog("INFO", `Received ${diff.toFixed(isUSDC ? 2 : 4)} ${assetName}`);
+                            onReceive?.(diff, assetName);
+                        }
                     }
                 }
 
-                if (prevUsdcBalanceRef.current !== null) {
-                    const diff = totalUsdc - prevUsdcBalanceRef.current;
-                    if (diff > 0.01) {
-                        addLog("INFO", `Received ${diff.toFixed(2)} USDC`);
-                        onReceive?.(diff, "USDC");
-                    }
-                }
-                prevUsdcBalanceRef.current = totalUsdc;
+                // Update refs
+                prevTokenBalancesRef.current = currentBalances;
 
             } catch (e) {
                 console.error("Balance watcher error:", e);
