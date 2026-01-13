@@ -108,6 +108,22 @@ No. Lazorkit uses the native **WebAuthn** capabilities of your browser. It works
 
 Passkeys are typically synced via **iCloud Keychain** or **Google Password Manager**. As long as you have access to your primary cloud account, your wallet remains accessible on your new device.
 
+### **Q: Why doesn't this work with a local Solana validator?**
+
+This starter uses Lazorkit's **hosted Paymaster service** for gasless transactions. The Paymaster is configured for Solana Devnet, which means:
+
+- ✅ **Devnet Development**: Works out of the box with `npm run dev` (recommended)
+- ❌ **Local Validator**: Requires self-hosted Paymaster infrastructure (advanced setup)
+
+**Why this happens:**
+When you run `solana-test-validator` locally, the remote Paymaster can't sponsor transactions because:
+
+1. The Paymaster's wallet doesn't exist on your local chain
+2. The Paymaster is connected to Devnet, not your local validator
+3. There's a network mismatch between local and remote infrastructure
+
+**For most developers**, Devnet provides the best experience with zero infrastructure setup. If you need local development, you would need to run your own Paymaster service connected to your local validator.
+
 ---
 
 ## 🚀 Quick Start (5 Minutes)
