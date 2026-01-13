@@ -87,12 +87,12 @@ sequenceDiagram
 
 ## Lazorkit UX Comparison
 
-| Feature            | Traditional Wallets                | Lazorkit (Passkey-First)          |
-| :----------------- | :--------------------------------- | :-------------------------------- |
-| **Setup**          | 5-10 minutes (Extension install)   | 2 seconds (Biometric Prompt)      |
-| **Gas Fees**       | User pays in SOL                   | Sponsored or Fee-Tokens (USDC)    |
-| **Auth**           | Seed phrase / Private key          | FaceID / TouchID                  |
-| **Onboarding**     | Complex (12-24 word backup)        | < 30 Seconds                      |
+| Feature            | Lazorkit (Passkey-First)           |
+| :----------------- | :--------------------------------- | --------------------------------- |
+| **Setup**          | 2 seconds (Biometric Prompt)       |
+| **Gas Fees**       | Sponsored or Fee-Tokens (USDC)     |
+| **Auth**           | FaceID / TouchID                   |
+| **Onboarding**     | < 30 Seconds                       |
 | **Security**       | Seed phrase vulnerability          | Hardware-bound (Secure Enclave)   |
 | **Device Support** | Desktop (Extension) / Mobile (App) | Native browser support everywhere |
 
