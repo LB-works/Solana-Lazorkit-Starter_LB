@@ -1,8 +1,101 @@
 # Lazorkit Solana Starter (Next.js)
 
-A high-performance, UX-first starter template for building Solana applications with [Lazorkit](https://lazorkit.com). Help your users skip the seed phrases and gas fees.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![Solana](https://img.shields.io/badge/Solana-Devnet-purple)](https://solana.com)
 
-## Why Choose This Template?
+A production-ready starter template for building Solana applications with passkey authentication and gasless transactions using [Lazorkit](https://lazorkit.com).
+
+## Live Demo
+
+🌐 **Try it now:** [Your Vercel App URL]
+🎥 **Video walkthrough:** [Coming soon]
+
+**No installation required** - Test passkey auth and gasless transactions directly in your browser.
+
+---
+
+## Get Started in 60 Seconds
+
+```bash
+git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
+cd YOUR-REPO
+npm install
+npm run dev
+# Open http://localhost:3000
+```
+
+---
+
+## What Makes This Different?
+
+This starter demonstrates **real-world production patterns** that other templates skip:
+
+1. **Real On-Chain USDC** - Not mocked. Uses actual Circle Devnet USDC (`4zMMC...`)
+2. **Robust Balance Watching** - Multi-asset receive detection tracks both SOL and USDC transfers
+3. **Wallet-Scoped Persistence** - LocalStorage keyed by wallet address prevents multi-wallet bugs
+4. **Full Session Management** - Disconnect button with complete state cleanup
+5. **Simulation Transparency** - Clear labeling distinguishes demo transactions from real ones
+
+**Built for developers who need to ship production apps, not just demos.**
+
+---
+
+## Screenshots
+
+### Dashboard Overview
+
+![Dashboard](images/dashboard.png)
+_Premium landing page with clear value proposition and clean design_
+
+### Passkey Authentication
+
+![Passkey Auth](images/passkey-auth.png)
+_Biometric login using system passkey - no seed phrases or browser extensions required_
+
+### Connect Wallet
+
+![Connect Wallet](images/connect%20wallet.png)
+_One-click connection with passkey authentication_
+
+### Connected Wallet State
+
+![Connected Wallet](images/connected%20wallet.png)
+_Active wallet showing SOL and USDC balances with session management_
+
+### Send Transaction (Gasless)
+
+![Send](images/send.png)
+_Gasless SOL/USDC transfers - user pays 0 fees, Paymaster sponsors_
+
+### Token Swap
+
+![Swap](images/swap.png)
+_Bidirectional SOL ↔ USDC swaps (Demo Simulation labeled for transparency)_
+
+### Transaction Activity Log
+
+![Activity Log](images/log.png)
+_Real-time multi-asset tracking with Solana Explorer links_
+
+### Transaction History
+
+![Transaction History](images/txn%20history.png)
+_Comprehensive transaction history with status indicators_
+
+### Gasless Proof (Solana Explorer)
+
+![Gasless Proof](images/gasless-proof.png)
+_On-chain verification: Fee Payer is the Paymaster, not the user - true gasless confirmed_
+
+### Payment & Subscription Demo
+
+![Payment](images/pay%26sub.png)
+_Recurring payment pattern demonstration for SaaS models_
+
+---
+
+## Features
 
 | Learning Pattern        | This Template       | Educational Value                       |
 | ----------------------- | ------------------- | --------------------------------------- |
@@ -41,6 +134,8 @@ sequenceDiagram
     Paymaster->>Solana: Submit Tx + Sponsor Gas (SOL)
     Solana-->>User: Success (Fixed 0.00 SOL fee)
 ```
+
+**Key Innovation:** The Paymaster sponsors ALL transaction fees, enabling true zero-balance onboarding.
 
 ---
 
@@ -87,14 +182,61 @@ sequenceDiagram
 
 ## Lazorkit UX Comparison
 
-| Feature            | Lazorkit (Passkey-First)           |
-| :----------------- | :--------------------------------- | --------------------------------- |
-| **Setup**          | 2 seconds (Biometric Prompt)       |
-| **Gas Fees**       | Sponsored or Fee-Tokens (USDC)     |
-| **Auth**           | FaceID / TouchID                   |
-| **Onboarding**     | < 30 Seconds                       |
-| **Security**       | Seed phrase vulnerability          | Hardware-bound (Secure Enclave)   |
-| **Device Support** | Desktop (Extension) / Mobile (App) | Native browser support everywhere |
+| Feature            | Lazorkit (Passkey-First)          |
+| :----------------- | :-------------------------------- |
+| **Setup**          | 2 seconds (Biometric Prompt)      |
+| **Gas Fees**       | Sponsored or Fee-Tokens (USDC)    |
+| **Auth**           | FaceID / TouchID                  |
+| **Onboarding**     | < 30 Seconds                      |
+| **Security**       | Hardware-bound (Secure Enclave)   |
+| **Device Support** | Native browser support everywhere |
+
+---
+
+## API Reference
+
+### useWallet() Hook
+
+```typescript
+const {
+  connect, // () => Promise<void>
+  disconnect, // () => Promise<void>
+  isConnected, // boolean
+  smartWalletPubkey, // PublicKey | null
+  signAndSendTransaction, // (payload) => Promise<string>
+} = useWallet();
+```
+
+### Transaction Payload
+
+```typescript
+interface TransactionPayload {
+  instructions: TransactionInstruction[];
+  transactionOptions?: {
+    computeUnitLimit?: number;
+    feeToken?: "SOL" | "USDC";
+  };
+}
+```
+
+### Example Usage
+
+```typescript
+import { SystemProgram, PublicKey } from "@solana/web3.js";
+import { useWallet } from "@lazorkit/wallet";
+
+const { signAndSendTransaction, smartWalletPubkey } = useWallet();
+
+const instruction = SystemProgram.transfer({
+  fromPubkey: smartWalletPubkey,
+  toPubkey: new PublicKey("RECIPIENT_ADDRESS"),
+  lamports: 100000,
+});
+
+const signature = await signAndSendTransaction({
+  instructions: [instruction],
+});
+```
 
 ---
 
@@ -131,8 +273,8 @@ When you run `solana-test-validator` locally, the remote Paymaster can't sponsor
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/lazor-kit/lazor-kit-starter.git
-cd lazor-kit-starter
+git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
+cd YOUR-REPO
 npm install
 ```
 
@@ -173,6 +315,26 @@ await signAndSendTransaction({
 ---
 
 ## Troubleshooting
+
+### "Transaction too large" Error
+
+**Cause:** Devnet congestion or complex transaction  
+**Fix:** Click "Try Again" or reduce transaction complexity
+
+### "TransactionTooOld" Error
+
+**Cause:** Devnet network congestion  
+**Fix:** This is a known Devnet issue, not a bug. Simply retry.
+
+### Balance shows 0.00 USDC
+
+**Cause:** No USDC in wallet  
+**Fix:** Use the "Get USDC" button to access Circle's Devnet faucet
+
+### Passkey prompt doesn't appear
+
+**Cause:** Browser doesn't support WebAuthn  
+**Fix:** Use Chrome, Safari, or Edge (not Firefox on Linux)
 
 ### WebAuthn requires HTTPS
 

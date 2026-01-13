@@ -1,48 +1,108 @@
-# Tutorial: Building a Passkey Request (Connect Wallet)
+# Tutorial: Passkey-Based Wallet Integration
 
-In this tutorial, we'll learn how to integrate **Passkey Authentication** content into your Solana dApp using Lazorkit. This replaces the traditional "Connect Wallet" -> "Select Phantom" -> "Approve" flow with a simple FaceID/TouchID prompt.
+Learn how to replace traditional wallet connections with biometric authentication using Lazorkit. No browser extensions, no seed phrases—just FaceID, TouchID, or Windows Hello.
 
-## Prerequisites
+## Table of Contents
 
-- A Next.js app set up (like this starter).
-- `@lazorkit/wallet` installed.
+1. [Why Passkeys?](#why-passkeys)
+2. [Architecture Overview](#architecture-overview)
+3. [Implementation Steps](#implementation-steps)
+4. [Advanced Patterns](#advanced-patterns)
+5. [Troubleshooting](#troubleshooting)
 
-## Step 1: Configure the Environment
+---
 
-Lazorkit requires a few configuration values to connect to the right capabilities (like the Paymaster).
-Create a `.env.local` file (or use the provided `.env.example`):
+## Why Passkeys?
 
-```bash
-NEXT_PUBLIC_LAZORKIT_RPC_ENDPOINT=https://api.devnet.solana.com
-NEXT_PUBLIC_USDC_MINT=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU
+### Traditional Wallet Flow (Bad UX)
+
+```
+User clicks "Connect"
+→ Select wallet extension (15+ options)
+→ Extension popup opens
+→ Approve connection
+→ Approve network switch
+→ finally connected (30-60 seconds)
 ```
 
-## Step 2: Initialize the Provider
+### Passkey Flow (10x Better)
 
-We need to wrap our application with the `LazorkitProvider`. This handles the global state for the passkey session.
+```
+User clicks "Connect with Passkey"
+→ FaceID/TouchID prompt
+→ Connected (2 seconds)
+```
 
-**File:** `src/components/LazorkitProviderWrapper.tsx`
+### Security Benefits
+
+| Feature            | Traditional Wallets    | Passkey Wallets             |
+| ------------------ | ---------------------- | --------------------------- |
+| **Seed Phrase**    | Required (12-24 words) | Not needed                  |
+| **Attack Surface** | Phishing, clipboard    | Hardware-bound              |
+| **Device Loss**    | Manual recovery        | Cloud sync (iCloud, Google) |
+| **Multi-device**   | Manual import          | Automatic sync              |
+
+---
+
+## Architecture Overview
+
+### How Passkeys Create Wallets
+
+```
+┌─────────────┐
+│   User      │
+│  (Browser)  │
+└──────┬──────┘
+       │ 1. Click "Connect"
+       ▼
+┌─────────────────────┐
+│  Lazorkit SDK       │
+│  @lazorkit/wallet   │
+└──────┬──────────────┘
+       │ 2. Request WebAuthn
+       ▼
+┌─────────────────────┐
+│  System Biometric   │
+│  (FaceID/TouchID)   │
+└──────┬──────────────┘
+       │ 3. Generate keypair
+       ▼
+┌─────────────────────┐
+│  Smart Wallet (PDA) │
+│  Account Abstraction│
+└─────────────────────┘
+```
+
+**Key Concept:** The passkey controls a **Smart Wallet (PDA)**, not a regular Solana keypair. This enables gasless transactions and account recovery.
+
+---
+
+## Implementation Steps
+
+### Step 1: Install Dependencies
+
+```bash
+npm install @lazorkit/wallet @solana/web3.js
+```
+
+### Step 2: Create the Provider Wrapper
+
+Create `src/components/LazorkitProviderWrapper.tsx`:
 
 ```typescript
 "use client";
+
 import { LazorkitProvider } from "@lazorkit/wallet";
 import { ReactNode } from "react";
-
-// Configuration for Devnet
-const config = {
-  rpcUrl: process.env.NEXT_PUBLIC_LAZORKIT_RPC_ENDPOINT!,
-  portalUrl: "https://portal.lazor.sh", // The centralized UI that handles the secure passkey enclave
-  paymasterConfig: {
-    paymasterUrl: "https://kora.devnet.lazorkit.com", // The service that pays the gas fees
-  },
-};
 
 export function LazorkitProviderWrapper({ children }: { children: ReactNode }) {
   return (
     <LazorkitProvider
-      rpcUrl={config.rpcUrl}
-      portalUrl={config.portalUrl}
-      paymasterConfig={config.paymasterConfig}
+      rpcUrl="https://api.devnet.solana.com"
+      portalUrl="https://portal.lazor.sh"
+      paymasterConfig={{
+        paymasterUrl: "https://kora.devnet.lazorkit.com",
+      }}
     >
       {children}
     </LazorkitProvider>
@@ -50,35 +110,223 @@ export function LazorkitProviderWrapper({ children }: { children: ReactNode }) {
 }
 ```
 
-## Step 3: Use the Hook
+**What each URL does:**
 
-The `useWallet()` hook gives you everything you need: connection status, public key, and methods to sign.
+- `rpcUrl`: Solana network endpoint (Devnet for testing)
+- `portalUrl`: Lazorkit's WebAuthn authentication service
+- `paymasterUrl`: Service that sponsors gas fees
 
-**File:** `components/ConnectWallet.tsx`
+### Step 3: Wrap Your App
+
+In `src/app/layout.tsx`:
 
 ```typescript
-import { useWallet } from "@lazorkit/wallet";
+import { LazorkitProviderWrapper } from "@/components/LazorkitProviderWrapper";
 
-export function ConnectWallet() {
-  const { connect, disconnect, isConnected, smartWalletPubkey } = useWallet();
-
-  if (isConnected) {
-    return (
-      <button onClick={disconnect}>
-        Disconnect {smartWalletPubkey.toBase58()}
-      </button>
-    );
-  }
-
-  return <button onClick={() => connect()}>Connect with Passkey</button>;
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <LazorkitProviderWrapper>{children}</LazorkitProviderWrapper>
+      </body>
+    </html>
+  );
 }
 ```
 
-## How it Works
+### Step 4: Build the Connect Component
 
-1. When `connect()` is called, the Lazorkit SDK opens a popup/iframe pointing to `portalUrl`.
-2. The user is prompted by their device (iOS/Android/Windows Hello) to authenticate.
-3. A secure keypair is generated (or retrieved) related to that passkey.
-4. The SDK returns the `publicKey` to your app. Since it's a Smart Wallet (Account Abstraction), this key can be controlled by the passkey.
+Create `src/components/ConnectWallet.tsx`:
 
-That's it! You now have a wallet connection without a seed phrase.
+```typescript
+"use client";
+
+import { useWallet } from "@lazorkit/wallet";
+import { useState } from "react";
+
+export function ConnectWallet() {
+  const { connect, disconnect, isConnected, smartWalletPubkey } = useWallet();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleConnect = async () => {
+    setIsLoading(true);
+    try {
+      await connect();
+    } catch (error) {
+      console.error("Connection failed:", error);
+      // User likely cancelled the passkey prompt
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isConnected && smartWalletPubkey) {
+    return (
+      <div className="flex items-center gap-4">
+        <span className="font-mono text-sm">
+          {smartWalletPubkey.toBase58().slice(0, 4)}...
+          {smartWalletPubkey.toBase58().slice(-4)}
+        </span>
+        <button
+          onClick={disconnect}
+          className="px-4 py-2 bg-red-500 text-white rounded"
+        >
+          Disconnect
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={handleConnect}
+      disabled={isLoading}
+      className="px-6 py-3 bg-purple-600 text-white rounded-lg"
+    >
+      {isLoading ? "Connecting..." : "Connect with Passkey"}
+    </button>
+  );
+}
+```
+
+### Step 5: Use in Your App
+
+```typescript
+import { ConnectWallet } from "@/components/ConnectWallet";
+
+export default function Home() {
+  return (
+    <div>
+      <h1>My Solana App</h1>
+      <ConnectWallet />
+    </div>
+  );
+}
+```
+
+---
+
+## Advanced Patterns
+
+### Pattern 1: Balance Display
+
+```typescript
+import { useWallet } from "@lazorkit/wallet";
+import { Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { useEffect, useState } from "react";
+
+export function WalletBalance() {
+  const { smartWalletPubkey, isConnected } = useWallet();
+  const [balance, setBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!isConnected || !smartWalletPubkey) return;
+
+    const connection = new Connection("https://api.devnet.solana.com");
+
+    const fetchBalance = async () => {
+      const bal = await connection.getBalance(smartWalletPubkey);
+      setBalance(bal / LAMPORTS_PER_SOL);
+    };
+
+    fetchBalance();
+    const interval = setInterval(fetchBalance, 5000);
+
+    return () => clearInterval(interval);
+  }, [smartWalletPubkey, isConnected]);
+
+  if (!isConnected) return null;
+
+  return (
+    <div>
+      Balance: {balance !== null ? `${balance.toFixed(4)} SOL` : "Loading..."}
+    </div>
+  );
+}
+```
+
+### Pattern 2: Conditional Rendering
+
+```typescript
+export function App() {
+  const { isConnected } = useWallet();
+
+  return <div>{!isConnected ? <Landing /> : <Dashboard />}</div>;
+}
+```
+
+### Pattern 3: Protected Routes
+
+```typescript
+"use client";
+
+import { useWallet } from "@lazorkit/wallet";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export function ProtectedPage() {
+  const { isConnected } = useWallet();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isConnected) {
+      router.push("/");
+    }
+  }, [isConnected, router]);
+
+  if (!isConnected) return null;
+
+  return <div>Protected Content</div>;
+}
+```
+
+---
+
+## Troubleshooting
+
+### Issue: Passkey prompt doesn't appear
+
+**Cause:** Browser doesn't support WebAuthn or running on HTTP  
+**Fix:**
+
+- Use Chrome, Safari, or Edge (not Firefox on Linux)
+- Ensure you're on `localhost` or `HTTPS`
+- Check browser console for errors
+
+### Issue: "User cancelled" error
+
+**Cause:** User dismissed the biometric prompt  
+**Fix:** This is expected behavior. Show a friendly message encouraging retry.
+
+### Issue: Connection works on desktop but not mobile
+
+**Cause:** Mobile browser doesn't support WebAuthn  
+**Fix:** Use Safari on iOS or Chrome on Android (latest versions)
+
+### Issue: Lost passkey access
+
+**Cause:** Device reset without cloud sync enabled  
+**Fix:**
+
+- Enable iCloud Keychain (iOS/Mac)
+- Enable Google Password Manager (Android/Chrome)
+- Passkeys sync automatically across devices
+
+---
+
+## Next Steps
+
+Now that you have wallet connection working:
+
+1. **Send a transaction** → Read [TUTORIAL_GASLESS.md](./TUTORIAL_GASLESS.md)
+2. **Maintain sessions** → Read [TUTORIAL_PERSISTENCE.md](./TUTORIAL_PERSISTENCE.md)
+
+---
+
+## Key Takeaways
+
+- Passkeys replace seed phrases with biometric authentication
+- The `useWallet()` hook provides connection status and wallet address
+- Smart Wallets (PDAs) enable gasless transactions and account recovery
+- Always wrap your app with `LazorkitProvider` at the root
+- Handle connection errors gracefully for better UX
