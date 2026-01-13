@@ -31,65 +31,32 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
     const [isLoading, setIsLoading] = useState(false);
     const [fromAmount, setFromAmount] = useState("0.01");
     const [toAmount, setToAmount] = useState("1.80");
-    const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
-    const [signature, setSignature] = useState("");
-    const [isSolToUsdc, setIsSolToUsdc] = useState(true);
-    const [balance, setBalance] = useState<number | null>(null);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const MOCK_RATES = {
-        SOL_TO_USDC: 180.50,
-        USDC_TO_SOL: 1 / 180.50
-    };
+    // ... existing MOCK_RATES ...
 
-    // Fetch Real Balance
-    useEffect(() => {
-        if (isConnected && smartWalletPubkey) {
-            const connection = new Connection("https://api.devnet.solana.com", "confirmed");
-            const fetchBal = () => connection.getBalance(smartWalletPubkey).then((bal) => setBalance(bal / LAMPORTS_PER_SOL)).catch(console.error);
-            fetchBal();
-            const id = setInterval(fetchBal, 5000);
-            return () => clearInterval(id);
-        }
-    }, [isConnected, smartWalletPubkey]);
+    // ... existing switchTokens ...
 
-    const switchTokens = () => {
-        setIsSolToUsdc(!isSolToUsdc);
-        const newFrom = toAmount;
-        setFromAmount(newFrom);
-        updateOutput(newFrom, !isSolToUsdc);
-        addLog("INFO", `Switched swap direction to ${!isSolToUsdc ? 'SOL -> USDC' : 'USDC -> SOL'}`);
-    };
+    // ... existing updateOutput ...
 
-    const updateOutput = (val: string, solToUsdc: boolean) => {
-        const num = Number(val);
-        if (solToUsdc) {
-            setToAmount((num * MOCK_RATES.SOL_TO_USDC).toFixed(2));
-        } else {
-            setToAmount((num * MOCK_RATES.USDC_TO_SOL).toFixed(6));
-        }
-    };
-
-    const handleAmountChange = (val: string) => {
-        setFromAmount(val);
-        updateOutput(val, isSolToUsdc);
-    };
+    // ... handleAmountChange ...
 
     const handleSwap = async () => {
         if (!isConnected || !smartWalletPubkey) return;
 
         setIsLoading(true);
         setStatus("idle");
+        setErrorMessage("");
         addLog("SIGNING", `Initiating swap: ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} for ${toAmount} ${isSolToUsdc ? 'USDC' : 'SOL'}`);
 
         try {
-            // In a real swap, we'd use Jupiter or another DEX.
-            // For this pattern, we demonstrate a gasless transfer as the swap "trigger".
+            // ... existing try block ...
             const amountInLamports = Math.floor(Number(fromAmount) * LAMPORTS_PER_SOL);
 
             const instruction = SystemProgram.transfer({
                 fromPubkey: smartWalletPubkey,
                 toPubkey: new PublicKey("8X35rQUK2u9hfn8rMPwwr6ZSEUhbmfDPEapp589XyoM1"), // Mock Pool Address
-                lamports: isSolToUsdc ? amountInLamports : 1000, // Minimal lamp for USDC mock path
+                lamports: isSolToUsdc ? amountInLamports : 1000,
             });
 
             const txSig = await signAndSendTransaction({
@@ -110,6 +77,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
         } catch (error: any) {
             console.error("Swap failed:", error);
             setStatus("error");
+            setErrorMessage(error.message || "Swap failed");
             addLog("ERROR", `Swap failed: ${error.message || 'User cancelled'}`);
         } finally {
             setIsLoading(false);
@@ -118,7 +86,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
 
     return (
         <div className="space-y-4">
-            {/* You Pay Section */}
+            {/* ... inputs ... */}
             <div className="space-y-2">
                 <div className="flex justify-between items-center px-1">
                     <label className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">You pay</label>
@@ -205,19 +173,36 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
                     </p>
                     <button
                         onClick={() => {
-                            // Update mock balances on reset
                             if (!isSolToUsdc) {
-                                // Swapped USDC -> SOL, so debit USDC
                                 updateBalance(Number(fromAmount), 'debit');
                             } else {
-                                // Swapped SOL -> USDC, so credit USDC
                                 updateBalance(Number(toAmount), 'credit');
                             }
                             setStatus("idle");
+                            setErrorMessage("");
                         }}
                         className="mt-3 w-full py-2 bg-green-600 text-white rounded-lg text-xs font-bold hover:bg-green-700 transition-colors"
                     >
                         New Swap
+                    </button>
+                </div>
+            ) : status === "error" ? (
+                <div className="mt-4 p-4 bg-red-50 border border-red-100 rounded-xl animate-in zoom-in-95 duration-200">
+                    <div className="flex items-center gap-2 mb-1">
+                        <div className="w-4 h-4 bg-red-100 text-red-600 rounded-full flex items-center justify-center">!</div>
+                        <p className="text-red-700 text-sm font-bold">Transaction Failed</p>
+                    </div>
+                    <p className="text-[10px] text-red-600 opacity-80 break-words mb-3">
+                        {errorMessage}
+                    </p>
+                    <button
+                        onClick={() => {
+                            setStatus("idle");
+                            setErrorMessage("");
+                        }}
+                        className="w-full py-2 bg-red-100 text-red-700 rounded-lg text-xs font-bold hover:bg-red-200 transition-colors"
+                    >
+                        Try Again
                     </button>
                 </div>
             ) : (
