@@ -3,6 +3,7 @@
 In this tutorial, we'll learn how to integrate **Passkey Authentication** content into your Solana dApp using Lazorkit. This replaces the traditional "Connect Wallet" -> "Select Phantom" -> "Approve" flow with a simple FaceID/TouchID prompt.
 
 ## Prerequisites
+
 - A Next.js app set up (like this starter).
 - `@lazorkit/wallet` installed.
 
@@ -49,7 +50,7 @@ export function LazorkitProviderWrapper({ children }: { children: ReactNode }) {
 }
 ```
 
-## Step 2: Use the Hook
+## Step 3: Use the Hook
 
 The `useWallet()` hook gives you everything you need: connection status, public key, and methods to sign.
 
@@ -69,15 +70,12 @@ export function ConnectWallet() {
     );
   }
 
-  return (
-    <button onClick={() => connect()}>
-      Connect with Passkey 🔑
-    </button>
-  );
+  return <button onClick={() => connect()}>Connect with Passkey</button>;
 }
 ```
 
 ## How it Works
+
 1. When `connect()` is called, the Lazorkit SDK opens a popup/iframe pointing to `portalUrl`.
 2. The user is prompted by their device (iOS/Android/Windows Hello) to authenticate.
 3. A secure keypair is generated (or retrieved) related to that passkey.

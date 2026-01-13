@@ -1,4 +1,4 @@
-# Tutorial: Understanding Session Persistence 💾
+# Tutorial: Understanding Session Persistence
 
 One of the biggest friction points in Web3 is the "re-login" dance. Lazorkit solves this by treating the browser as a secure, persistent gateway to the user's Smart Wallet.
 
@@ -22,11 +22,11 @@ In `ConnectWallet.tsx`, we demonstrate how to leverage this built-in persistence
 const { isConnected, smartWalletPubkey } = useWallet();
 
 useEffect(() => {
-    // If we're already connected on mount, the SDK has recovered the session!
-    if (isConnected && smartWalletPubkey) {
-        console.log("Welcome back!", smartWalletPubkey.toBase58());
-        fetchBalance();
-    }
+  // If we're already connected on mount, the SDK has recovered the session!
+  if (isConnected && smartWalletPubkey) {
+    console.log("Welcome back!", smartWalletPubkey.toBase58());
+    fetchBalance();
+  }
 }, [isConnected, smartWalletPubkey]);
 ```
 
@@ -36,5 +36,6 @@ useEffect(() => {
 - **Hardware Bound**: Even if a physical device is stolen, the passkey is protected by Biometrics (FaceID/TouchID).
 - **No Seed Phrases**: No plain-text keys are stored in local storage, reducing attack surface.
 
-## Pro-Tip 🏆
-Test this by logging in, refreshing the page, and watching the balance area. You'll notice you stay logged in seamlessly,this is the **10x UX** in action!
+## Pro-Tip
+
+Test this by logging in, refreshing the page, and watching the balance area. You'll notice you stay logged in seamlessly, this is the **10x UX** in action!

@@ -1,20 +1,20 @@
-# ⚡ Lazorkit Solana Starter (Next.js)
+# Lazorkit Solana Starter (Next.js)
 
 A high-performance, UX-first starter template for building Solana applications with [Lazorkit](https://lazorkit.com). Help your users skip the seed phrases and gas fees.
 
-## 🏆 Why Choose This Template?
+## Why Choose This Template?
 
-| Learning Pattern        | This Template          | Educational Value                       |
-| ----------------------- | ---------------------- | --------------------------------------- |
-| **Bidirectional Swaps** | ✅ Full implementation | Master dynamic transaction construction |
-| **Activity Timeline**   | ✅ Live event logging  | Understand UserOperation lifecycle      |
-| **Feature Gating**      | ✅ Subscription hook   | Learn wallet-based access control       |
-| **Multi-Asset Send**    | ✅ SOL + USDC          | Master SPL token patterns               |
-| **Gasless Everywhere**  | ✅ All transactions    | True Web2 UX experience                 |
+| Learning Pattern        | This Template       | Educational Value                       |
+| ----------------------- | ------------------- | --------------------------------------- |
+| **Bidirectional Swaps** | Full implementation | Master dynamic transaction construction |
+| **Activity Timeline**   | Live event logging  | Understand UserOperation lifecycle      |
+| **Feature Gating**      | Subscription hook   | Learn wallet-based access control       |
+| **Multi-Asset Send**    | SOL + USDC          | Master SPL token patterns               |
+| **Gasless Everywhere**  | All transactions    | True Web2 UX experience                 |
 
 ---
 
-## 🏗️ Technical Architecture
+## Technical Architecture
 
 We use a **hybrid security model** that combines hardware-level passkey signatures with non-custodial Smart Wallets.
 
@@ -32,7 +32,7 @@ sequenceDiagram
     User->>Browser: Authenticate
     Browser->>Lazorkit: Signed Challenge
     Lazorkit->>Solana: Deploy/Identify Smart Wallet
-    Solana-->>User: Wallet Connected 🎉
+    Solana-->>User: Wallet Connected
 
     Note over User,Solana: Executing a Gasless Transaction
 
@@ -44,39 +44,39 @@ sequenceDiagram
 
 ---
 
-## 📚 Recommended Learning Path
+## Recommended Learning Path
 
 **New to Lazorkit?** Follow this sequence to master passkey wallets and account abstraction:
 
-### 1️⃣ Foundation: Passkey Authentication
+### Step 1: Foundation - Passkey Authentication
 
 **Start with:** `ConnectWallet.tsx`
 
 - Learn how WebAuthn creates secure, password-less wallets.
 - Understand the smart wallet creation and persistence flow.
 
-### 2️⃣ Core Pattern: Gasless Multi-Asset Transfers
+### Step 2: Core Pattern - Gasless Multi-Asset Transfers
 
 **Next:** `SendFund.tsx` → `ReceiveFund.tsx`
 
 - Learn how paymasters sponsor transaction fees for both SOL and SPL tokens.
 - Master the canonical "Send/Receive" patterns in Web3.
 
-### 3️⃣ Observability: SDK Interaction Timeline
+### Step 3: Observability - SDK Interaction Timeline
 
 **Then:** `ActivityLogUI.tsx` + `useActivityLog.ts`
 
 - Understand the background "magic" of UserOperations.
 - Learn how to visualize SDK event lifecycles for better developer UX.
 
-### 4️⃣ Advanced: Bidirectional Swaps
+### Step 4: Advanced - Bidirectional Swaps
 
 **Next:** `TokenSwap.tsx`
 
 - Master complex transaction construction with bidirectional logic.
 - Learn how to manage dynamic input/output state in production-ready dApps.
 
-### 5️⃣ Real-World: Feature Gating
+### Step 5: Real-World - Feature Gating
 
 **Finally:** `useSubscription.ts`
 
@@ -85,35 +85,35 @@ sequenceDiagram
 
 ---
 
-## 📊 TLazorkit UX
+## Lazorkit UX Comparison
 
-| Feature            | Lazorkit (Passkey-First)           |
-| :----------------- | :--------------------------------- | --------------------------------- |
-| **Setup**          | 2 seconds (Biometric Prompt)       |
-| **Gas Fees**       | Sponsored or Fee-Tokens (USDC)     |
-| **Auth**           | FaceID / TouchID                   |
-| **Onboarding**     | **< 30 Seconds**                   |
+| Feature            | Traditional Wallets                | Lazorkit (Passkey-First)          |
+| :----------------- | :--------------------------------- | :-------------------------------- |
+| **Setup**          | 5-10 minutes (Extension install)   | 2 seconds (Biometric Prompt)      |
+| **Gas Fees**       | User pays in SOL                   | Sponsored or Fee-Tokens (USDC)    |
+| **Auth**           | Seed phrase / Private key          | FaceID / TouchID                  |
+| **Onboarding**     | Complex (12-24 word backup)        | < 30 Seconds                      |
 | **Security**       | Seed phrase vulnerability          | Hardware-bound (Secure Enclave)   |
 | **Device Support** | Desktop (Extension) / Mobile (App) | Native browser support everywhere |
 
 ---
 
-## ❓ FAQ & Troubleshooting
+## FAQ & Troubleshooting
 
-### **Q: Do I need a browser extension to use this?**
+### Q: Do I need a browser extension to use this?
 
 No. Lazorkit uses the native **WebAuthn** capabilities of your browser. It works just like Logging in with Apple or Google but in a fully non-custodial way.
 
-### **Q: What happens if I lose my phone?**
+### Q: What happens if I lose my phone?
 
 Passkeys are typically synced via **iCloud Keychain** or **Google Password Manager**. As long as you have access to your primary cloud account, your wallet remains accessible on your new device.
 
-### **Q: Why doesn't this work with a local Solana validator?**
+### Q: Why doesn't this work with a local Solana validator?
 
 This starter uses Lazorkit's **hosted Paymaster service** for gasless transactions. The Paymaster is configured for Solana Devnet, which means:
 
-- ✅ **Devnet Development**: Works out of the box with `npm run dev` (recommended)
-- ❌ **Local Validator**: Requires self-hosted Paymaster infrastructure (advanced setup)
+- **Devnet Development**: Works out of the box with `npm run dev` (recommended)
+- **Local Validator**: Requires self-hosted Paymaster infrastructure (advanced setup)
 
 **Why this happens:**
 When you run `solana-test-validator` locally, the remote Paymaster can't sponsor transactions because:
@@ -126,7 +126,7 @@ When you run `solana-test-validator` locally, the remote Paymaster can't sponsor
 
 ---
 
-## 🚀 Quick Start (5 Minutes)
+## Quick Start (5 Minutes)
 
 ### 1. Clone & Install
 
@@ -150,7 +150,7 @@ npm run dev
 
 ---
 
-## 🛠️ Expert Code Snippets
+## Expert Code Snippets
 
 ### A. Connection (ConnectWallet.tsx)
 
@@ -172,18 +172,18 @@ await signAndSendTransaction({
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-### **WebAuthn requires HTTPS**
+### WebAuthn requires HTTPS
 
 Passkeys will only work on `localhost` or `HTTPS` domains.
 
-### **Insufficient Paymaster Funds**
+### Insufficient Paymaster Funds
 
-If gasless transactions fail on Devnet, try the **"Get SOL ↗"** button in the header.
+If gasless transactions fail on Devnet, try the **"Get SOL"** button in the header.
 
 ---
 
-## 📄 License
+## License
 
 MIT
