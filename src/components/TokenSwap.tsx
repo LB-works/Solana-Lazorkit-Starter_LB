@@ -79,7 +79,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
 
         setIsLoading(true);
         setStatus("idle");
-        addLog("SIGNING", `Initiating ${isSolToUsdc ? 'SOL -> USDC' : 'USDC -> SOL'} swap for ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'}`);
+        addLog("SIGNING", `Initiating swap: ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} for ${toAmount} ${isSolToUsdc ? 'USDC' : 'SOL'}`);
 
         try {
             // In a real swap, we'd use Jupiter or another DEX.
@@ -98,7 +98,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
 
             setSignature(txSig);
             setStatus("success");
-            addLog("SUCCESS", `Swap confirmed! Saved ~0.002 SOL in gas via Paymaster.`, { signature: txSig });
+            addLog("SUCCESS", `Swapped ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} for ${toAmount} ${isSolToUsdc ? 'USDC' : 'SOL'}`, { signature: txSig });
 
             window.dispatchEvent(new Event("refresh-balance"));
             onComplete?.({ amount: fromAmount, status: "success", signature: txSig });

@@ -3,6 +3,7 @@
 import { useWallet } from "@lazorkit/wallet";
 import { Copy, QrCode } from "lucide-react";
 import { useState } from "react";
+import { useActivityLog } from "../hooks/useActivityLog";
 
 /**
  * PATTERN: Smart Wallet Receive Flow
@@ -14,13 +15,19 @@ import { useState } from "react";
  */
 export function ReceiveFund() {
     const { smartWalletPubkey } = useWallet();
-    const [selectedAsset, setSelectedAsset] = useState<"SOL" | "USDC">("SOL");
     const { addLog } = useActivityLog();
+    const [selectedAsset, setSelectedAsset] = useState<"SOL" | "USDC">("SOL");
+
+    // Log view events
+    const handleAssetChange = (asset: "SOL" | "USDC") => {
+        setSelectedAsset(asset);
+        addLog("INFO", `Viewed ${asset} Receive Address`);
+    };
     const address = smartWalletPubkey?.toBase58() || "";
 
     const copyAddress = () => {
         navigator.clipboard.writeText(address);
-        addLog("INFO", `Copied ${selectedAsset} address to clipboard needs`);
+        addLog("INFO", `Copied ${selectedAsset} address to clipboard`);
         alert("Address copied!");
     };
 
@@ -30,7 +37,7 @@ export function ReceiveFund() {
             <div className="w-full flex justify-center">
                 <div className="bg-gray-100/60 p-1 rounded-xl flex gap-1">
                     <button
-                        onClick={() => setSelectedAsset("SOL")}
+                        onClick={() => handleAssetChange("SOL")}
                         className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${selectedAsset === "SOL"
                             ? "bg-white text-[#7857ff] shadow-sm"
                             : "text-gray-400 hover:text-gray-600"
@@ -42,7 +49,7 @@ export function ReceiveFund() {
                         </div>
                     </button>
                     <button
-                        onClick={() => setSelectedAsset("USDC")}
+                        onClick={() => handleAssetChange("USDC")}
                         className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${selectedAsset === "USDC"
                             ? "bg-white text-[#7857ff] shadow-sm"
                             : "text-gray-400 hover:text-gray-600"

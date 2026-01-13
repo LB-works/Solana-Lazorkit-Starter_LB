@@ -22,8 +22,7 @@ export function useActivityLog() {
     const [logs, setLogs] = useState<LogEntry[]>([]);
     const [isInitialized, setIsInitialized] = useState(false);
 
-    // Initialize from localStorage
-    useEffect(() => {
+    const loadLogs = () => {
         const storedLogs = localStorage.getItem("lazorkit_activity_logs");
         if (storedLogs) {
             try {
@@ -32,17 +31,27 @@ export function useActivityLog() {
                 console.error("Failed to parse logs", e);
             }
         }
+    };
+
+    // Initialize & Listen for Updates
+    useEffect(() => {
+        loadLogs();
         setIsInitialized(true);
+
+        const handleStorageChange = () => loadLogs();
+        window.addEventListener("activity-log-updated", handleStorageChange);
+        window.addEventListener("storage", handleStorageChange); // Cross-tab support
+
+        return () => {
+            window.removeEventListener("activity-log-updated", handleStorageChange);
+            window.removeEventListener("storage", handleStorageChange);
+        };
     }, []);
 
-    // Persist to localStorage
-    useEffect(() => {
-        if (isInitialized) {
-            localStorage.setItem("lazorkit_activity_logs", JSON.stringify(logs));
-        }
-    }, [logs, isInitialized]);
-
     const addLog = (type: LogEntry["type"], message: string, data?: any) => {
+        // Read fresh logs directly from storage to avoid closure staleness
+        const currentLogs: LogEntry[] = JSON.parse(localStorage.getItem("lazorkit_activity_logs") || "[]");
+
         const newLog: LogEntry = {
             id: Math.random().toString(36).substring(7),
             timestamp: Date.now(),
@@ -50,12 +59,19 @@ export function useActivityLog() {
             message,
             data
         };
-        setLogs(prev => [newLog, ...prev].slice(0, 50)); // Keep last 50
+
+        const updatedLogs = [newLog, ...currentLogs].slice(0, 50);
+        localStorage.setItem("lazorkit_activity_logs", JSON.stringify(updatedLogs));
+
+        // Update local state and notify others
+        setLogs(updatedLogs);
+        window.dispatchEvent(new Event("activity-log-updated"));
     };
 
     const clearLogs = () => {
         setLogs([]);
         localStorage.removeItem("lazorkit_activity_logs");
+        window.dispatchEvent(new Event("activity-log-updated"));
     };
 
     return { logs, addLog, clearLogs };
