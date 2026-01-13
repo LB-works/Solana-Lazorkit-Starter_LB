@@ -5,12 +5,14 @@ import { Loader2, Wallet } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { WalletModal } from "./WalletModal";
+import { useUSDC } from "../hooks/useUSDC";
 
 /**
  * ConnectWallet Component
  */
 export function ConnectWallet() {
     const { connect, isConnected, smartWalletPubkey, isLoading } = useWallet();
+    const { balance: usdcBalance } = useUSDC();
     const [isConnecting, setIsConnecting] = useState(false);
     const [balance, setBalance] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -83,6 +85,7 @@ export function ConnectWallet() {
                     onClose={() => setIsModalOpen(false)}
                     address={smartWalletPubkey.toBase58()}
                     balance={balance}
+                    usdcBalance={usdcBalance.toFixed(2)}
                 />
             </>
         );

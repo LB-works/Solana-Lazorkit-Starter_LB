@@ -1,6 +1,7 @@
 "use client";
 
-import { X, Copy, ExternalLink, Shield, Zap, TrendingUp, History, CreditCard } from "lucide-react";
+import { X, Copy, ExternalLink, Shield, Zap, TrendingUp, History, CreditCard, LogOut } from "lucide-react";
+import { useWallet } from "@lazorkit/wallet";
 import { useState } from "react";
 
 interface WalletModalProps {
@@ -12,6 +13,7 @@ interface WalletModalProps {
 }
 
 export function WalletModal({ isOpen, onClose, address, balance, usdcBalance = "1,240.50" }: WalletModalProps) {
+    const { disconnect } = useWallet();
     if (!isOpen) return null;
 
     const copyAddress = () => {
@@ -91,7 +93,7 @@ export function WalletModal({ isOpen, onClose, address, balance, usdcBalance = "
                             <div className="bg-gray-50 rounded-[24px] p-5 border border-gray-100 flex-1 flex flex-col justify-center gap-2">
                                 <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Asset Class</p>
                                 <div className="flex items-center justify-between text-gray-900 text-xs font-bold">
-                                    <span>Mock USDC</span>
+                                    <span>USDC</span>
                                     <span className="text-gray-400 tracking-tight">${usdcBalance}</span>
                                 </div>
                             </div>
@@ -99,15 +101,17 @@ export function WalletModal({ isOpen, onClose, address, balance, usdcBalance = "
                     </div>
                 </div>
 
-                {/* Footer Actions */}
                 <div className="p-8 pt-2 grid grid-cols-2 gap-3">
-                    <a
-                        href={`https://explorer.solana.com/address/${address}?cluster=devnet`}
-                        target="_blank"
-                        className="flex items-center justify-center gap-2 py-4 bg-gray-900 text-white rounded-[24px] font-bold text-sm hover:bg-black transition-colors shadow-xl shadow-black/10"
+                    <button
+                        onClick={async () => {
+                            await disconnect();
+                            onClose();
+                            window.location.reload(); // Force reload to clear any local state remnants
+                        }}
+                        className="flex items-center justify-center gap-2 py-4 bg-red-50 text-red-600 rounded-[24px] font-bold text-sm hover:bg-red-100 transition-colors"
                     >
-                        Explorer <ExternalLink size={14} />
-                    </a>
+                        Disconnect <LogOut size={14} />
+                    </button>
                     <button
                         onClick={onClose}
                         className="flex items-center justify-center gap-2 py-4 bg-gray-100 text-gray-900 rounded-[24px] font-bold text-sm hover:bg-gray-200 transition-colors"
