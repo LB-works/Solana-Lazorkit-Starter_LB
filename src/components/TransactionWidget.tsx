@@ -82,13 +82,12 @@ export function TransactionWidget() {
     };
 
     // Enable observation of balance changes - Place AFTER addToHistory so it can use it
-    useBalanceWatcher((amount, asset) => {
+    useBalanceWatcher((amount) => {
         addToHistory({
             type: "Receive",
-            amount: `${asset === "USDC" ? amount.toFixed(2) : amount.toFixed(4)} ${asset}`,
+            amount: `${amount.toFixed(4)} SOL`,
             status: "success",
-            // If it's a generic token, say "Received Token", otherwise "Received USDC/SOL"
-            description: `Received ${asset} from external wallet`
+            description: "Received from external wallet"
         });
     });
 
