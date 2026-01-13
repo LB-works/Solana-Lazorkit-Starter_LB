@@ -1,7 +1,7 @@
 "use client";
 
 import { useWallet } from "@lazorkit/wallet";
-import { Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useEffect, useRef } from "react";
 import { useActivityLog } from "./useActivityLog";
 
