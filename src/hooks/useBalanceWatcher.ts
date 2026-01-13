@@ -66,8 +66,10 @@ export function useBalanceWatcher(onReceive?: (amount: number, asset: "SOL" | "U
                     }
                 }
 
-                // Update refs
-                prevTokenBalancesRef.current = currentBalances;
+                // Update refs ONLY if we successfully fetched data
+                if (currentBalances.size > 0 || tokenAccounts.value.length === 0) {
+                    prevTokenBalancesRef.current = currentBalances;
+                }
 
             } catch (e) {
                 console.error("Balance watcher error:", e);

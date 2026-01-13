@@ -33,6 +33,7 @@ export function useUSDC() {
             setBalance(total);
         } catch (error) {
             console.error("Failed to fetch USDC balance:", error);
+            // Do NOT reset balance to 0 on error - keep previous valid state
         } finally {
             setIsLoading(false);
         }
