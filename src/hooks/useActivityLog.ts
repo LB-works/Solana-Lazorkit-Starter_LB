@@ -20,6 +20,7 @@ export interface LogEntry {
  */
 export function useActivityLog() {
     const [logs, setLogs] = useState<LogEntry[]>([]);
+    const [isInitialized, setIsInitialized] = useState(false);
 
     // Initialize from localStorage
     useEffect(() => {
@@ -31,12 +32,15 @@ export function useActivityLog() {
                 console.error("Failed to parse logs", e);
             }
         }
+        setIsInitialized(true);
     }, []);
 
     // Persist to localStorage
     useEffect(() => {
-        localStorage.setItem("lazorkit_activity_logs", JSON.stringify(logs));
-    }, [logs]);
+        if (isInitialized) {
+            localStorage.setItem("lazorkit_activity_logs", JSON.stringify(logs));
+        }
+    }, [logs, isInitialized]);
 
     const addLog = (type: LogEntry["type"], message: string, data?: any) => {
         const newLog: LogEntry = {

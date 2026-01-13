@@ -15,10 +15,12 @@ import { useState } from "react";
 export function ReceiveFund() {
     const { smartWalletPubkey } = useWallet();
     const [selectedAsset, setSelectedAsset] = useState<"SOL" | "USDC">("SOL");
+    const { addLog } = useActivityLog();
     const address = smartWalletPubkey?.toBase58() || "";
 
     const copyAddress = () => {
         navigator.clipboard.writeText(address);
+        addLog("INFO", `Copied ${selectedAsset} address to clipboard needs`);
         alert("Address copied!");
     };
 
@@ -30,8 +32,8 @@ export function ReceiveFund() {
                     <button
                         onClick={() => setSelectedAsset("SOL")}
                         className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${selectedAsset === "SOL"
-                                ? "bg-white text-[#7857ff] shadow-sm"
-                                : "text-gray-400 hover:text-gray-600"
+                            ? "bg-white text-[#7857ff] shadow-sm"
+                            : "text-gray-400 hover:text-gray-600"
                             }`}
                     >
                         <div className="flex items-center gap-1.5">
@@ -42,8 +44,8 @@ export function ReceiveFund() {
                     <button
                         onClick={() => setSelectedAsset("USDC")}
                         className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${selectedAsset === "USDC"
-                                ? "bg-white text-[#7857ff] shadow-sm"
-                                : "text-gray-400 hover:text-gray-600"
+                            ? "bg-white text-[#7857ff] shadow-sm"
+                            : "text-gray-400 hover:text-gray-600"
                             }`}
                     >
                         <div className="flex items-center gap-1.5">

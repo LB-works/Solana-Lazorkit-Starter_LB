@@ -5,6 +5,7 @@ import { SystemProgram, Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/
 import { ArrowDown, Loader2, ShieldCheck } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useActivityLog } from "../hooks/useActivityLog";
+import { useMockUSDC } from "../hooks/useMockUSDC";
 
 /**
  * ═══════════════════════════════════════════════════════════════
@@ -26,6 +27,7 @@ import { useActivityLog } from "../hooks/useActivityLog";
 export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void }) {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
     const { addLog } = useActivityLog();
+    const { balance: usdcBalance, updateBalance } = useMockUSDC();
     const [isLoading, setIsLoading] = useState(false);
     const [fromAmount, setFromAmount] = useState("0.01");
     const [toAmount, setToAmount] = useState("1.80");
@@ -33,7 +35,6 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
     const [signature, setSignature] = useState("");
     const [isSolToUsdc, setIsSolToUsdc] = useState(true);
     const [balance, setBalance] = useState<number | null>(null);
-    const [usdcBalance, setUsdcBalance] = useState<number>(0); // Mock USDC balance
 
     const MOCK_RATES = {
         SOL_TO_USDC: 180.50,
@@ -46,8 +47,6 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
             const connection = new Connection("https://api.devnet.solana.com", "confirmed");
             const fetchBal = () => connection.getBalance(smartWalletPubkey).then((bal) => setBalance(bal / LAMPORTS_PER_SOL)).catch(console.error);
             fetchBal();
-            // Mock USDC balance for demo (in production, fetch from SPL token account)
-            setUsdcBalance(250.00);
             const id = setInterval(fetchBal, 5000);
             return () => clearInterval(id);
         }
@@ -203,9 +202,11 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
                         onClick={() => {
                             // Update mock balances on reset
                             if (!isSolToUsdc) {
-                                setUsdcBalance(prev => Math.max(0, prev - Number(fromAmount)));
+                                // Swapped USDC -> SOL, so debit USDC
+                                updateBalance(Number(fromAmount), 'debit');
                             } else {
-                                setUsdcBalance(prev => prev + Number(toAmount));
+                                // Swapped SOL -> USDC, so credit USDC
+                                updateBalance(Number(toAmount), 'credit');
                             }
                             setStatus("idle");
                         }}

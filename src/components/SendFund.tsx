@@ -5,6 +5,7 @@ import { SystemProgram, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { Loader2, Send, ShieldCheck, User } from "lucide-react";
 import { useState } from "react";
 import { useActivityLog } from "../hooks/useActivityLog";
+import { useMockUSDC } from "../hooks/useMockUSDC";
 
 /**
  * PATTERN: Gasless Asset Transfer
@@ -17,11 +18,13 @@ import { useActivityLog } from "../hooks/useActivityLog";
 export function SendFund() {
     const { isConnected, smartWalletPubkey, signAndSendTransaction } = useWallet();
     const { addLog } = useActivityLog();
+    const { balance: usdcBalance, updateBalance } = useMockUSDC();
     const [recipient, setRecipient] = useState("");
     const [amount, setAmount] = useState("");
     const [token, setToken] = useState<"SOL" | "USDC">("SOL");
     const [isLoading, setIsLoading] = useState(false);
     const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleSend = async () => {
         if (!isConnected || !smartWalletPubkey || !recipient || !amount) return;
@@ -67,6 +70,7 @@ export function SendFund() {
         } catch (error: any) {
             console.error("Transfer failed:", error);
             setStatus("error");
+            setErrorMessage(error.message || "Transfer failed");
             addLog("ERROR", `Transfer failed: ${error.message || 'Cancelled'}`);
         } finally {
             setIsLoading(false);
@@ -127,10 +131,11 @@ export function SendFund() {
                     </button>
                 </div>
                 {token === "USDC" && (
-                    <div className="bg-blue-50 border border-blue-100 rounded-lg p-2 mt-2">
+                    <div className="bg-blue-50 border border-blue-100 rounded-lg p-2 mt-2 flex justify-between items-center">
                         <p className="text-blue-700 text-[10px] font-bold leading-relaxed">
-                            💡 <span className="font-black">USDC (Mock)</span> is a simulated SPL token for demo purposes. It showcases gasless transfers and SDK flows. Not real USDC.
+                            <span className="font-black">USDC (Mock)</span> Balance
                         </p>
+                        <span className="text-blue-800 font-mono font-bold text-xs">{usdcBalance.toFixed(2)} USDC</span>
                     </div>
                 )}
             </div>
@@ -142,7 +147,20 @@ export function SendFund() {
                         <p className="text-green-800 text-xs font-bold leading-tight">Transfer Sent!</p>
                         <p className="text-green-600 text-[10px] opacity-70">Gas sponsored by Paymaster</p>
                     </div>
-                    <button onClick={() => setStatus("idle")} className="text-xs font-bold text-green-700 hover:underline">Reset</button>
+                    <button onClick={() => {
+                        if (token === "USDC") {
+                            updateBalance(Number(amount), 'debit');
+                        }
+                        setStatus("idle");
+                    }} className="text-xs font-bold text-green-700 hover:underline">Reset</button>
+                </div>
+            ) : status === "error" ? (
+                <div className="p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3 animate-in zoom-in-95">
+                    <div className="flex-1">
+                        <p className="text-red-800 text-xs font-bold leading-tight">Transaction Failed</p>
+                        <p className="text-red-600 text-[10px] opacity-80 break-words">{errorMessage || "Unknown error"}</p>
+                    </div>
+                    <button onClick={() => setStatus("idle")} className="text-xs font-bold text-red-700 hover:underline">Try Again</button>
                 </div>
             ) : (
                 <button
