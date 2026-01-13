@@ -31,15 +31,49 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
     const [isLoading, setIsLoading] = useState(false);
     const [fromAmount, setFromAmount] = useState("0.01");
     const [toAmount, setToAmount] = useState("1.80");
+    const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+    const [signature, setSignature] = useState("");
+    const [isSolToUsdc, setIsSolToUsdc] = useState(true);
+    const [balance, setBalance] = useState<number | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
 
-    // ... existing MOCK_RATES ...
+    const MOCK_RATES = {
+        SOL_TO_USDC: 180.50,
+        USDC_TO_SOL: 1 / 180.50
+    };
 
-    // ... existing switchTokens ...
+    // Fetch Real Balance
+    useEffect(() => {
+        if (isConnected && smartWalletPubkey) {
+            const connection = new Connection("https://api.devnet.solana.com", "confirmed");
+            const fetchBal = () => connection.getBalance(smartWalletPubkey).then((bal) => setBalance(bal / LAMPORTS_PER_SOL)).catch(console.error);
+            fetchBal();
+            const id = setInterval(fetchBal, 5000);
+            return () => clearInterval(id);
+        }
+    }, [isConnected, smartWalletPubkey]);
 
-    // ... existing updateOutput ...
+    const switchTokens = () => {
+        setIsSolToUsdc(!isSolToUsdc);
+        const newFrom = toAmount;
+        setFromAmount(newFrom);
+        updateOutput(newFrom, !isSolToUsdc);
+        addLog("INFO", `Switched swap direction to ${!isSolToUsdc ? 'SOL -> USDC' : 'USDC -> SOL'}`);
+    };
 
-    // ... handleAmountChange ...
+    const updateOutput = (val: string, solToUsdc: boolean) => {
+        const num = Number(val);
+        if (solToUsdc) {
+            setToAmount((num * MOCK_RATES.SOL_TO_USDC).toFixed(2));
+        } else {
+            setToAmount((num * MOCK_RATES.USDC_TO_SOL).toFixed(6));
+        }
+    };
+
+    const handleAmountChange = (val: string) => {
+        setFromAmount(val);
+        updateOutput(val, isSolToUsdc);
+    };
 
     const handleSwap = async () => {
         if (!isConnected || !smartWalletPubkey) return;
@@ -50,7 +84,8 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
         addLog("SIGNING", `Initiating swap: ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} for ${toAmount} ${isSolToUsdc ? 'USDC' : 'SOL'}`);
 
         try {
-            // ... existing try block ...
+            // In a real swap, we'd use Jupiter or another DEX.
+            // For this pattern, we demonstrate a gasless transfer as the swap "trigger".
             const amountInLamports = Math.floor(Number(fromAmount) * LAMPORTS_PER_SOL);
 
             const instruction = SystemProgram.transfer({
@@ -86,7 +121,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
 
     return (
         <div className="space-y-4">
-            {/* ... inputs ... */}
+            {/* You Pay Section */}
             <div className="space-y-2">
                 <div className="flex justify-between items-center px-1">
                     <label className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">You pay</label>
