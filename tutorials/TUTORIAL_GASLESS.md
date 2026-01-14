@@ -30,7 +30,6 @@ New User arrives at your dApp
 
 - Don't understand what SOL is
 - Don't want to create exchange account
-- Don't want to pay $50 minimum purchase
 - Just wanted to try your app
 
 **Developer Pain:**
