@@ -31,7 +31,7 @@ Today, I'm showing you the **Lazorkit Solana Starter**, a production-ready templ
 **Audio/Voiceover:**
 "First, watch the login flow. No extension required. I click 'Connect', use my FaceID, and... I'm in.
 
-It takes less than few seconds. Under the hood, this created a non-custodial **Smart Wallet** secured by my device's hardware enclave. No seed phrases to lose."
+It takes less than a few seconds to complete. Under the hood, this created a non-custodial **Smart Wallet** secured by my device's hardware enclave. No seed phrases to lose."
 
 ---
 
