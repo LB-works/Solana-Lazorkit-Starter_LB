@@ -5,104 +5,102 @@
 
 ---
 
-## Scene 1: Introduction & The Problem (0:00 - 0:30)
-
-**Visual:**
-
-- Start with the **Welcome Screen** of your app.
-- Briefly show a standard "Connect Wallet" popup (like Phantom) as a comparison (optional, or just mention it).
+## Scene 1: Introduction
 
 **Audio/Voiceover:**
-"Building on Solana is fast, but onboarding users is still slow. Seed phrases, browser extensions, and needing SOL for gas fees—it's a massive barrier (or 'bounce point') for new users.
+"Hello guys, I'm here today to demo the Lazorkit Solana starter template. We all know building on Solana is fast, but onboarding users is still slow. The constant need for seed phrases, wallet extensions, and needing SOL for gas fees—these make a massive barrier or an inconvenience for new users and some veteran users as well.
 
-Today, I'm showing you the **Lazorkit Solana Starter**, a production-ready template that solves this with **Biometric Passkeys** and **Gasless Transactions**. Let's dive in."
+Lazorkit solves this issue with Passkeys and Gasless Transactions. No need for seed phrases, or keeping some SOL for transaction fees. So let's dive in and see this operation in action."
 
 ---
 
-## Scene 2: Passkey Authentication (0:30 - 1:00)
+## Scene 2: Passkey Authentication
 
 **Action:**
 
-1. Click the **"Connect with Passkey"** button.
-2. Show the **System Biometric Prompt** (FaceID / TouchID / Windows Hello) popping up.
+1. Click the **"Connect Passkey"** button.
+2. Show the **System Biometric Prompt** (FaceID / TouchID / Windows Hello).
 3. Authenticate instantly.
-4. Show the **Connected Dashboard** appearing immediately.
 
 **Audio/Voiceover:**
-"First, watch the login flow. No extension required. I click 'Connect', use my FaceID, and... I'm in.
+"First, to begin the login flow, all you have to do is click 'Connect Passkey' and authenticate with your biometric—FaceID, TouchID, or Windows Hello. And just like that, we're in.
 
-It takes less than 2 seconds. Under the hood, this created a non-custodial **Smart Wallet** secured by my device's hardware enclave. No seed phrases to lose."
+It takes less than 2 seconds. Under the hood, this created a non-custodial Smart Wallet secured by my device's hardware enclave. No seed phrases to write down or lose."
 
 ---
 
-## Scene 3: Gasless Transactions (SOL) (1:00 - 1:30)
+## Scene 3: Gasless Transactions (SOL)
 
 **Action:**
 
-1. Go to the **"Send"** tab.
-2. Enter a recipient address.
-3. Enter a small amount (e.g., 0.01 SOL).
-4. Point out the "Gasless Patterns Active" badge or mention the fee is 0.
-5. Click **"Send"**.
-6. Wait for the success message.
-7. **Crucial:** Click the "View on Explorer" link. Show that the **Fee Payer** is a different address (the Paymaster).
+1. Navigate to **Send** tab.
+2. Enter recipient and amount (0.01 SOL).
+3. Click **"Send SOL"**.
+4. Show success message and click **"View on Explorer"**.
+5. Highlight **Fee Payer** (Paymaster) address.
 
 **Audio/Voiceover:**
-"Now for the magic: Gasless Transactions. Usually, a user needs SOL to pay for gas. But here, our **Paymaster** sponsors the fee.
+"Now, let me show you the real magic: Gasless Transactions.
 
-I'm sending SOL... and it's confirmed. If we check the explorer, you can see I paid **zero** fees. The Lazorkit Paymaster covered it entirely. This means you can onboard users with literally zero balance."
+I'll navigate to the Send tab here. I'm going to send a small amount of SOL—let's say 0.01 SOL—to this recipient address.
+
+Notice the 'Gasless Patterns Active' badge? That means our Paymaster is sponsoring the transaction fee.
+
+I'll click 'Send SOL'... and there we go—transaction confirmed!
+
+Now here's the important part: let me click 'View on Explorer' to prove this is truly gasless.
+
+As you can see on the Solana Explorer, the 'Fee Payer' is a different address from my wallet. That's the Lazorkit Paymaster covering the fee entirely. I paid zero SOL for this transaction. This means you can onboard users with literally zero balance—they can start using your app immediately."
 
 ---
 
-## Scene 4: Multi-Asset Support (USDC) (1:30 - 2:00)
+## Scene 4: USDC Transfer
 
 **Action:**
 
-1. Toggle the asset selector to **USDC**.
-2. Show that the balance is real (Circle Devnet USDC), not mocked.
-3. Initiate a transfer.
+1. Switch asset to **USDC**.
+2. Show real balance.
+3. Initiate transfer.
 
 **Audio/Voiceover:**
-"This isn't just for SOL. We've integrated full support for SPL tokens like **USDC**.
+"This isn't just for SOL. Let me switch to USDC here.
 
-This template uses the real Circle Devnet USDC mint, so you can build robust payment flows immediately. It detects incoming transfers for both assets in real-time."
+This template uses real Circle Devnet USDC—not mocked data. I can send USDC the exact same way, and it's also gasless.
+
+The starter detects incoming transfers for both SOL and USDC in real-time, which you can see in the activity log here."
 
 ---
 
-## Scene 5: Session Persistence & Architecture (2:00 - 2:30)
+## Scene 5: Session Persistence
 
 **Action:**
 
-1. **Refresh the page**.
-2. Show that the wallet **stays connected** instantly.
+1. Refresh the page.
+2. Show wallet stays connected.
 3. Click **"Disconnect"**.
-4. Show the return to the landing page.
 
 **Audio/Voiceover:**
-"One major friction point in Web3 is constant re-connection. We've implemented robust **Session Persistence**.
+"One major friction point in Web3 is constant reconnection every time you refresh. Let me show you how this solves that.
 
-If I refresh the page, I stay logged in—just like a Web2 app. But unlike Web2, it's non-custodial. When I'm done, a clean 'Disconnect' wipes the session keys for security."
+I'm going to refresh the page right now... and as you can see, I'm still logged in. No need to reconnect, no passkey prompt—it just works, like a Web2 app.
+
+But unlike Web2, this is completely non-custodial. My keys are still hardware-bound to my device.
+
+When I'm done, I can click 'Disconnect' to securely wipe the session. Clean logout, just like that."
 
 ---
 
-## Scene 6: Conclusion (2:30 - Finish)
+## Scene 6: Conclusion
 
 **Visual:**
 
-- Show the GitHub Repository README.
-- Scroll through the features list or screenshots.
+- Show GitHub Repo / README.
 
 **Audio/Voiceover:**
-"This starter kit comes with everything you need: Authentication, Gasless infrastructure, Token Swaps, and comprehensive documentation to help you win your next hackathon.
+"So that's the Lazorkit Solana Starter in action.
 
-It's open source and available now. Clone the repo and start building the future of Solana UX today."
+This template gives you everything you need: passkey authentication, gasless infrastructure, real USDC support, token swaps, and comprehensive documentation to help you build production-ready Solana apps.
 
----
+It's fully open source and available on GitHub right now. Clone the repo, customize it for your project, and start building the future of Solana UX today.
 
-## Production Tips:
-
-- **Resolution:** Record in **1080p** or higher.
-- **Clean Environment:** Close other browser tabs and irrelevant windows.
-- **Zoom:** Zoom in slightly (110-125%) in your browser so text is readable on mobile devices.
-- **Mouse:** Move your mouse smoothly; avoid jittery movements.
-- **Audio:** If you can't record voiceover, use a high-quality AI voiceover tool (like ElevenLabs) or add clear, concise subtitles.
+Thanks for watching!"
