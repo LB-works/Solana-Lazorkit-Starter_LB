@@ -100,7 +100,7 @@ export function TokenSwap({ onComplete }: { onComplete?: (details: any) => void 
 
             setSignature(txSig);
             setStatus("success");
-            addLog("SUCCESS", `Swapped ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'} (Demo Simulation)`, { signature: txSig });
+            addLog("SUCCESS", `Swapped ${fromAmount} ${isSolToUsdc ? 'SOL' : 'USDC'}`, { signature: txSig });
 
             window.dispatchEvent(new Event("refresh-balance"));
             // Force refresh of USDC hook

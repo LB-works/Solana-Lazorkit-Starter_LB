@@ -58,7 +58,7 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
                 status: "success",
                 signature: sig
             });
-            alert(`Subscription Activated!\nSignature: ${sig.slice(0, 8)}...`);
+            // Subscription successful
 
         } catch (error: any) {
             console.error("Subscription failed:", error);
@@ -122,23 +122,40 @@ export function SubscriptionService({ onComplete }: { onComplete?: (details: { a
             </div>
 
             {/* Submit Button */}
-            <button
-                onClick={handleSubscribe}
-                disabled={!isConnected || isLoading}
-                className={`w-full py-4 rounded-2xl font-black text-lg transition-all shadow-[0_12px_24px_-8px_rgba(120,87,255,0.3)] flex items-center justify-center gap-2 ${!isConnected || isLoading
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-[#7857ff] text-white hover:bg-[#6646ff] hover:scale-[1.02] active:scale-[0.98]"
-                    }`}
-            >
-                {isLoading ? (
-                    <>
-                        <Loader2 className="animate-spin" size={20} />
-                        Confirming...
-                    </>
-                ) : (
-                    "Subscribe Now"
-                )}
-            </button>
+            {status === "success" ? (
+                <div className="bg-green-50 text-center py-6 rounded-2xl border border-green-100 animate-in fade-in zoom-in">
+                    <div className="flex justify-center mb-3">
+                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <ShieldCheck size={20} className="text-green-600" />
+                        </div>
+                    </div>
+                    <p className="text-green-800 font-bold text-base mb-1">Subscription Activated!</p>
+                    <p className="text-green-600 text-sm">Auto-billing enabled</p>
+                </div>
+            ) : status === "error" ? (
+                <div className="bg-red-50 text-center py-4 rounded-xl border border-red-100 mb-2">
+                    <p className="text-red-600 font-bold text-sm mb-2">Subscription Failed</p>
+                    <button onClick={() => setStatus('idle')} className="text-xs font-bold bg-white border border-red-100 text-red-500 px-4 py-2 rounded-full hover:bg-red-50 transition-colors">Try Again</button>
+                </div>
+            ) : (
+                <button
+                    onClick={handleSubscribe}
+                    disabled={!isConnected || isLoading}
+                    className={`w-full py-4 rounded-2xl font-black text-lg transition-all shadow-[0_12px_24px_-8px_rgba(120,87,255,0.3)] flex items-center justify-center gap-2 ${!isConnected || isLoading
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : "bg-[#7857ff] text-white hover:bg-[#6646ff] hover:scale-[1.02] active:scale-[0.98]"
+                        }`}
+                >
+                    {isLoading ? (
+                        <>
+                            <Loader2 className="animate-spin" size={20} />
+                            Confirming...
+                        </>
+                    ) : (
+                        "Subscribe Now"
+                    )}
+                </button>
+            )}
 
             {!isConnected && (
                 <p className="text-center text-gray-400 text-[10px] mt-3 font-bold uppercase tracking-widest italic leading-none">

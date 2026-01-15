@@ -54,7 +54,7 @@ export function PayWithSolana({ onComplete }: { onComplete?: (details: { amount:
             });
 
             setStatus("success");
-            addLog("SUCCESS", `Payment successful! Saved ~0.002 SOL in gas fees.`, { signature: sig });
+            addLog("SUCCESS", `Payment successful!`, { signature: sig });
             // Trigger balance refresh
             window.dispatchEvent(new Event("refresh-balance"));
 
