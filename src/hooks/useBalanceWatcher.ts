@@ -8,15 +8,18 @@ import { useActivityLog } from "./useActivityLog";
 // Standard Circle Devnet USDC Mint
 const USDC_MINT = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 
-export function useBalanceWatcher(onReceive?: (amount: number, asset: "SOL" | "USDC" | "Token") => void) {
+export function useBalanceWatcher(onReceive?: (amount: number, asset: "SOL" | "USDC" | "Token", signature?: string) => void) {
     const { isConnected, smartWalletPubkey } = useWallet();
     const { addLog } = useActivityLog();
     const prevSolBalanceRef = useRef<number | null>(null);
-    // Store mint -> balance
     const prevTokenBalancesRef = useRef<Map<string, number>>(new Map());
+    const hasInitializedRef = useRef(false);
 
     useEffect(() => {
-        if (!isConnected || !smartWalletPubkey) return;
+        if (!isConnected || !smartWalletPubkey) {
+            hasInitializedRef.current = false;
+            return;
+        }
 
         const connection = new Connection("https://api.devnet.solana.com", "confirmed");
 
@@ -26,11 +29,16 @@ export function useBalanceWatcher(onReceive?: (amount: number, asset: "SOL" | "U
                 const bal = await connection.getBalance(smartWalletPubkey);
                 const solBal = bal / LAMPORTS_PER_SOL;
 
-                if (prevSolBalanceRef.current !== null) {
-                    const diff = solBal - prevSolBalanceRef.current;
-                    if (diff > 0.001) {
+                if (hasInitializedRef.current) {
+                    const diff = solBal - (prevSolBalanceRef.current || 0);
+                    // Filter out tiny dust fluctuations, but ensure 0.001 (standard test amt) is caught
+                    if (diff > 0.0001) {
+                        // Fetch signature
+                        const signatures = await connection.getSignaturesForAddress(smartWalletPubkey, { limit: 1 });
+                        const recentSig = signatures[0]?.signature;
+                        
                         addLog("INFO", `Received ${diff.toFixed(4)} SOL`);
-                        onReceive?.(diff, "SOL");
+                        onReceive?.(diff, "SOL", recentSig);
                     }
                 }
                 prevSolBalanceRef.current = solBal;
@@ -42,34 +50,34 @@ export function useBalanceWatcher(onReceive?: (amount: number, asset: "SOL" | "U
 
                 const currentBalances = new Map<string, number>();
 
-                for (const { account } of tokenAccounts.value) {
+                for (const { pubkey, account } of tokenAccounts.value) {
                     const info = account.data.parsed.info;
                     const mint = info.mint;
                     const amount = info.tokenAmount.uiAmount || 0;
                     currentBalances.set(mint, amount);
 
-                    // If we have history for this mint, check for change
-                    if (prevTokenBalancesRef.current.has(mint)) {
+                    if (hasInitializedRef.current) {
+                        // Default to 0 if new token (covers 'First Deposit' case)
                         const prev = prevTokenBalancesRef.current.get(mint) || 0;
                         const diff = amount - prev;
 
-                        // Detect increase (Received)
                         if (diff > 0) {
                             const isUSDC = mint === USDC_MINT;
                             const assetName = isUSDC ? "USDC" : "Token";
+                            
+                            // Fetch signature for the ATA
+                            const signatures = await connection.getSignaturesForAddress(pubkey, { limit: 1 });
+                            const recentSig = signatures[0]?.signature;
 
-                            // Log it
                             const formattedAmount = isUSDC ? diff.toFixed(2) : diff.toFixed(4);
                             addLog("INFO", `Received ${formattedAmount} ${assetName}`);
-                            onReceive?.(diff, assetName);
+                            onReceive?.(diff, assetName, recentSig);
                         }
                     }
                 }
 
-                // Update refs ONLY if we successfully fetched data
-                if (currentBalances.size > 0 || tokenAccounts.value.length === 0) {
-                    prevTokenBalancesRef.current = currentBalances;
-                }
+                prevTokenBalancesRef.current = currentBalances;
+                hasInitializedRef.current = true;
 
             } catch (e) {
                 console.error("Balance watcher error:", e);
